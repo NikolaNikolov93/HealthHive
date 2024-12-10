@@ -1,6 +1,6 @@
 # Full-Stack Pharmacy Store
 
-A complete full-stack web application for managing a pharmacy store, built with **Node.js**, **Express**, **MongoDB**, and **React** with **TypeScript**. This app allows customers to browse and order medications, while admins can manage products, orders, and users efficiently.
+A complete full-stack web application created by Nikola Nikolov for managing a pharmacy store, built with **Node.js**, **Express**, **MongoDB**, and **React** with **TypeScript**. This app allows customers to browse and order medications, while admins can manage products, orders, and users efficiently.
 
 ---
 
