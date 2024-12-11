@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "sourceMap": true,
+    "baseUrl": "src",
+    "noImplicitAny": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
-  }
+    "outDir": "dist"
+  },
+  "include": ["src/**/*"]
 }
