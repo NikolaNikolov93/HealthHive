@@ -32,5 +32,4 @@ const UserSchema = new Schema<IUser>(
   { timestamps: true } // Automatically manage `createdAt` and `updatedAt`
 );
 
-const UserModel = mongoose.model<IUser>("User", UserSchema);
-export default UserModel;
+export const UserModel = mongoose.model<IUser>("User", UserSchema);

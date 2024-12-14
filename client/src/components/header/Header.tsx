@@ -6,8 +6,9 @@ const HeaderContainer = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 1em 2em;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #eaeaea;
+  background-color: #9191916c;
+  max-width: 1440px;
+  margin: 0 auto;
 `;
 
 const Logo = styled.div`
@@ -22,7 +23,7 @@ const Nav = styled.nav`
 
   a {
     text-decoration: none;
-    color: #007bff;
+    color: #ffffff;
     font-size: 1rem;
 
     &:hover {
