@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken"; // Import the JSON Web Token (JWT) library
-import dotenv from "dotenv"; // Import dotenv to load environment variables from a .env file
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-dotenv.config(); // Load environment variables from a .env file into process.env
+dotenv.config(); // Load environment variables from a .env file
 
 // Retrieve the secret key from environment variables, defaulting to an empty string if not provided
 const secretKey = process.env.JWT_SECRET || "";
@@ -17,7 +17,7 @@ export const generateToken = (
   payload: object,
   expiresIn: string = "1h" // Default expiration time is one hour
 ): string => {
-  return jwt.sign(payload, secretKey, { expiresIn }); // Create and return the signed token
+  return jwt.sign(payload, secretKey, { expiresIn });
 };
 
 /**
@@ -27,5 +27,12 @@ export const generateToken = (
  * @returns The decoded payload if the token is valid, otherwise an error is thrown
  */
 export const verifyToken = (token: string): object | string => {
-  return jwt.verify(token, secretKey); // Verify the token using the secret key and return the decoded payload
+  try {
+    // Verify the token using the secret key and return the decoded payload
+    return jwt.verify(token, secretKey);
+  } catch (err) {
+    // Log the error and throw a more descriptive error
+    console.error("JWT verification error:", err);
+    throw new Error("Invalid or expired token");
+  }
 };
