@@ -1,4 +1,5 @@
 import express from "express"; // Import the Express framework to create the web server
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose"; // Import Mongoose to connect to and interact with MongoDB
 import cors from "cors"; // Import CORS middleware to enable cross-origin resource sharing
 import dotenv from "dotenv"; // Import dotenv to load environment variables from a .env file
@@ -14,8 +15,14 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Apply middleware to the Express app
-app.use(cors()); // Enable CORS to allow requests from other origins (e.g., frontend application)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+); // Enable CORS to allow requests from other origins (e.g., frontend application)
 app.use(express.json()); // Middleware to parse incoming JSON payloads in requests
+app.use(cookieParser()); // Parse cookies
 
 // Connect to MongoDB using the connection string (URI) from environment variables
 mongoose
