@@ -2,9 +2,27 @@ import express, { Request, Response } from "express";
 import { UserModel } from "../models/User";
 import { hashPassword, comparePassword } from "../utils/bcrypt"; // Import bcrypt utilities for password hashing and comparison
 import { generateToken } from "../utils/jwt"; // Import JWT utility to generate tokens
-import { createUser, getUserByEmail } from "../services/userService"; // Import user service functions for creating and fetching users
+import { createUser, getUserByEmail, getUsers } from "../services/userService"; // Import user service functions for creating and fetching users
+import authenticateAdmin from "../middlewares/authAdmin";
 
 const router = express.Router();
+
+router.get(
+  "/users",
+  authenticateAdmin,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const users = await getUsers();
+      res.json(users);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: "An unknown error occurred" });
+      }
+    }
+  }
+);
 
 /**
  * @route POST /auth/register
