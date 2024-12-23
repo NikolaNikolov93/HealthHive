@@ -94,7 +94,12 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
     });
 
     // Return success message and the user's role
-    return res.json({ message: "Login successful", role: user.role });
+    return res.json({
+      message: "Login successful",
+      role: user.role,
+      name: user.name,
+      id: user._id,
+    });
   } catch (err) {
     // If an error occurs during login, send a 500 server error response
     return res.status(500).json({ error: "Server error" });
@@ -106,10 +111,16 @@ router.post("/login", async (req: Request, res: Response): Promise<any> => {
  * @description Logout a user (clear the auth token)
  * @access Public
  */
-// router.post("/logout", (req: Request, res: Response) => {
-//   // Instruct the client to remove the auth token cookie for logging out
-//   res.clearCookie("authToken"); // Clear the "authToken" cookie
-//   return res.json({ message: "Logout successful" }); // Return success message
-// });
+router.post("/logout", (req: Request, res: Response): void => {
+  // Clear the "authToken" cookie by setting it to an empty value with a past expiration date
+  res.cookie("authToken", "", {
+    httpOnly: true, // Ensure it's still HTTP-only
+    expires: new Date(0), // Set the expiration date to a past date
+    sameSite: "strict", // Maintain the SameSite policy
+  });
+
+  // Respond with a success message
+  res.status(200).json({ message: "Logout successful" });
+});
 
 export default router;
