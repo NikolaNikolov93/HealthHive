@@ -1,2 +1,23 @@
 @import url("./styles/base/reset.css");
 @import url("./styles/base/typography.css");
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #8ed8a6;
+  border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #8ed8a6;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #8ed8a6 #e0e0e0;
+}
