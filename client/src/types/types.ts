@@ -24,3 +24,8 @@ export type UserType = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type ErrorsType = {
+  message: string;
+  isFixed: boolean;
+};
