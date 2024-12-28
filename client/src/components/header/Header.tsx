@@ -1,8 +1,10 @@
 import styled from "styled-components"; // Assuming you're using styled-components
-import { Link } from "react-router-dom"; // If you're using React Router
+import { Link, useNavigate } from "react-router-dom"; // If you're using React Router
 import { FaSearch } from "react-icons/fa";
 import { CiShoppingCart } from "react-icons/ci";
 import { logout } from "../../services/auth";
+import { useDispatch, useSelector } from "react-redux";
+import { logout as logoutAction } from "../../redux/user/userSlice";
 
 const HeaderContainer = styled.header`
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Adjust the values as needed */
@@ -114,10 +116,20 @@ const ShoppingCart = styled(Link)`
   }
 `;
 
-const handleLogout = () => {
-  logout();
-};
 const Header = () => {
+  const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
+  const user = useSelector((state: any) => state.user.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      dispatch(logoutAction());
+      navigate("/");
+    } catch (error) {}
+  };
+
   return (
     <HeaderContainer>
       <NavContainer>
@@ -139,12 +151,22 @@ const Header = () => {
           </SearchButton>
         </SearchBarWrapper>
         <Nav>
-          <Link to="/login">Вход</Link>
-          <Link to="/register">Регистрация</Link>
-          <button onClick={handleLogout}>Изход</button>
-          <ShoppingCart to="/cart">
-            <CiShoppingCart />
-          </ShoppingCart>
+          {isLoggedIn && <p>{`Wellcome ${user.name}`}</p>}
+
+          {isLoggedIn ? (
+            <>
+              {" "}
+              <button onClick={handleLogout}>Изход</button>
+              <ShoppingCart to="/cart">
+                <CiShoppingCart />
+              </ShoppingCart>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Вход</Link>
+              <Link to="/register">Регистрация</Link>
+            </>
+          )}
         </Nav>
       </NavContainer>
     </HeaderContainer>

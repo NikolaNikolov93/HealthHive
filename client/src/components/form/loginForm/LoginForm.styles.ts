@@ -57,6 +57,7 @@ export const LoginForm = styled.form`
 
 // Styled component for input fields
 export const Input = styled.input`
+  position: relative;
   padding: 0.8em; /* Add padding inside input */
   font-size: 1em; /* Standard font size */
   border: 1px solid #ccc; /* Light gray border */
