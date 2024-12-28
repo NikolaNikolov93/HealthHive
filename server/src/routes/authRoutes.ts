@@ -30,7 +30,7 @@ router.get(
  * @access Public
  */
 router.post("/register", async (req: Request, res: Response): Promise<any> => {
-  const { _id, name, email, password, role, address } = req.body;
+  const { name, email, password } = req.body;
 
   try {
     // Check if the user already exists based on the provided email
@@ -44,12 +44,13 @@ router.post("/register", async (req: Request, res: Response): Promise<any> => {
 
     // Create the new user in the database
     const newUser = await createUser({
-      _id,
       name,
       email,
       password: hashedPassword,
-      role,
-      address,
+      role: "customer",
+      address: {
+        phone: "",
+      },
     });
 
     // Return success message with the newly created user details
