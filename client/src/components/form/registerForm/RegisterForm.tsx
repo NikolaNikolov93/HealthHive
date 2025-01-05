@@ -10,7 +10,6 @@ import {
 } from "../loginForm/LoginForm.styles";
 import { useState } from "react";
 import { register } from "../../../services/auth";
-import { useNavigate } from "react-router-dom";
 
 // Main component for the login/register form
 const RegisterFormComponent: React.FC = () => {
@@ -21,7 +20,6 @@ const RegisterFormComponent: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [errors, setErrors] = useState<ErrorsType[]>([]);
-  const navigate = useNavigate();
 
   // Function to handle the form submission based on the page type (login/register)
   const handleSubmit = async () => {
@@ -34,9 +32,11 @@ const RegisterFormComponent: React.FC = () => {
       setErrors([{ message: userData.error, isFixed: false }]);
     } else {
       // Handle successful login (e.g., redirect or set user data)
+      setErrors([{ message: "Успешно регистриране", isFixed: true }]);
       setEmail("");
       setPassword("");
-      navigate("/");
+      setName("");
+      setConfirmPassword("");
     }
   };
 

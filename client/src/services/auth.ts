@@ -49,8 +49,11 @@ export const register = async (
     //Fix errir response
     if (!response.ok) {
       const errorData = await response.json();
-
-      throw new Error(errorData.error);
+      if (errorData.error === "User already exists") {
+        throw new Error("Има регистриран потребител с този имейл!");
+      } else {
+        throw new Error("Грешка при регистрирането");
+      }
     }
 
     // Return the response data if login is successful
