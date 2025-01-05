@@ -1,5 +1,6 @@
 import useMedicines from "../../../hooks/useMedicines";
 import { MedType } from "../../../types/types";
+import StockDetails from "./StockDetails";
 import {
   Button,
   Table,
@@ -30,30 +31,36 @@ const MedicinesTable: React.FC<MedicinesTableProps> = ({ searchTerm }) => {
           <TableHeaderCell>Brand</TableHeaderCell>
           <TableHeaderCell>Description</TableHeaderCell>
           <TableHeaderCell>Price</TableHeaderCell>
-          <TableHeaderCell>Stock</TableHeaderCell>
+
           <TableHeaderCell>Expiration Date</TableHeaderCell>
           <TableHeaderCell>Category</TableHeaderCell>
           <TableHeaderCell>Actions</TableHeaderCell>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredMedicines?.map((medicine: MedType) => (
-          <TableRow key={medicine._id}>
-            <TableCell>{medicine.name}</TableCell>
-            <TableCell>{medicine.brand}</TableCell>
-            <TableCell>{medicine.description}</TableCell>
-            <TableCell>${medicine.price}</TableCell>
-            <TableCell>{medicine.stock}</TableCell>
-            <TableCell>
-              {new Date(medicine.expirationDate).toLocaleDateString()}
-            </TableCell>
-            <TableCell>{medicine.category}</TableCell>
-            <TableCell>
-              <Button onClick={() => handleUpdate(medicine._id)}>Update</Button>
-              <Button onClick={() => handleDelete(medicine._id)}>Delete</Button>
-            </TableCell>
-          </TableRow>
-        ))}
+        {filteredMedicines?.map((medicine: MedType) => {
+          return (
+            <TableRow key={medicine._id}>
+              <TableCell>{medicine.name}</TableCell>
+              <TableCell>{medicine.brand}</TableCell>
+              <TableCell>{medicine.description}</TableCell>
+              <TableCell>${medicine.price}</TableCell>
+
+              <TableCell>
+                <StockDetails stockDetails={medicine.stockDetails} />
+              </TableCell>
+              <TableCell>{medicine.category}</TableCell>
+              <TableCell>
+                <Button onClick={() => handleUpdate(medicine._id)}>
+                  Update
+                </Button>
+                <Button onClick={() => handleDelete(medicine._id)}>
+                  Delete
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );

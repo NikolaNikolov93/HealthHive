@@ -4,8 +4,7 @@ export type MedType = {
   brand: string;
   description: string;
   price: number;
-  stock: number;
-  expirationDate: string;
+  stockDetails: Map<string, number>;
   category: string;
 };
 
