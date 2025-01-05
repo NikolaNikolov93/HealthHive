@@ -135,13 +135,13 @@ const Header = () => {
       <NavContainer>
         <Logo>
           <Link to="/">
-            <img src="logo.png" alt="" />
+            <img src="/logo.png" alt="" />
           </Link>
         </Logo>
         <Categories>
           <Link to="/categories">
             <span>Категории</span>
-            <img src="categories3.png" alt="" />
+            <img src="/categories3.png" alt="" />
           </Link>
         </Categories>
         <SearchBarWrapper>
