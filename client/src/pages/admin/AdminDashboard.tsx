@@ -8,9 +8,12 @@ import {
 } from "./AdminDashboard.styles"; // Importing styled components
 import MedicinesTable from "./tables/MedicinesTable";
 import UsersTable from "./tables/UsersTable";
+import Modal from "../../components/modal/Modal";
+import AddMedicine from "./adminForms/AddMedicine";
 
 const AdminDashboard = () => {
   const [view, setView] = useState<"users" | "medicines">("medicines");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState(""); // State for search input
 
@@ -38,6 +41,7 @@ const AdminDashboard = () => {
       <ToggleButtonsContainer>
         <button onClick={() => setView("users")}>Users</button>
         <button onClick={() => setView("medicines")}>Medicines</button>
+        <button onClick={() => setIsModalOpen(true)}>Add Medicine</button>
       </ToggleButtonsContainer>
       {view === "medicines" ? (
         <MedicinesTable searchTerm={searchTerm} />
@@ -45,6 +49,11 @@ const AdminDashboard = () => {
         <UsersTable searchTerm={searchTerm} />
       ) : (
         <h1>Error</h1>
+      )}
+      {isModalOpen && (
+        <Modal title="Add Medicine" onClose={() => setIsModalOpen(false)}>
+          <AddMedicine />
+        </Modal>
       )}
     </div>
   );

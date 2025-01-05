@@ -26,6 +26,10 @@ export const SearchInput = styled.input`
 `;
 export const ToggleButtonsContainer = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 1em;
+  button {
+    padding: 0.3em 0.5em;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); /* Adjust the values as needed */
+    background-color: #8ed8a6;
+  }
 `;

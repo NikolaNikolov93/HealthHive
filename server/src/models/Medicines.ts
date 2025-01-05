@@ -7,8 +7,7 @@ export interface IMedicine extends Document {
   brand: string;
   description: string;
   price: number;
-  stock: number;
-  expirationDate: string;
+  stockDetails: Map<string, number>;
   category: string;
 }
 
@@ -18,8 +17,11 @@ const MedicineSchema: Schema = new Schema({
   brand: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  stock: { type: Number, required: true },
-  expirationDate: { type: String, required: true },
+  stockDetails: {
+    type: Map,
+    of: Number,
+    required: true,
+  },
   category: { type: String, required: true },
 });
 
