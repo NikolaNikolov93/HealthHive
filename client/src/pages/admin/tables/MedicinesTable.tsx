@@ -1,3 +1,4 @@
+import { useDeleteMedicine } from "../../../hooks/useDeleteMedicine";
 import useMedicines from "../../../hooks/useMedicines";
 import { MedType } from "../../../types/types";
 import StockDetails from "./StockDetails";
@@ -17,6 +18,7 @@ type MedicinesTableProps = {
 
 const MedicinesTable: React.FC<MedicinesTableProps> = ({ searchTerm }) => {
   const { data: medicines, isLoading, error } = useMedicines();
+  const deleteMedicine = useDeleteMedicine();
   // Filter medicines based on the search term
   const filteredMedicines = medicines?.filter((medicine: MedType) =>
     medicine.name.toLowerCase().includes(searchTerm)
@@ -73,6 +75,7 @@ const MedicinesTable: React.FC<MedicinesTableProps> = ({ searchTerm }) => {
 
   function handleDelete(id: string) {
     console.log(`Delete medicine with ID: ${id}`);
+    deleteMedicine.mutate(id);
     // Call a service or function to delete the medicine
   }
 };
