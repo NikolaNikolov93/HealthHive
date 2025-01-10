@@ -36,7 +36,7 @@ export const addNewMedicine = async (medicineData: {
 }): Promise<IMedicine> => {
   // Check if a medicine with the same name already exists in the database
   const existingMedicine = await MedicineModel.findOne({
-    name: medicineData.name,
+    name: { $regex: new RegExp(`^${medicineData.name}$`, "i") },
   }).exec();
 
   if (existingMedicine) {
