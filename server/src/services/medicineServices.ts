@@ -41,7 +41,8 @@ export const addNewMedicine = async (medicineData: {
 
   if (existingMedicine) {
     // If the medicine exists, update its stock details
-    const stockData = Object.entries(medicineData.stockDetails);
+    const stockData = Array.from(medicineData.stockDetails.entries());
+    console.log(stockData);
 
     // Iterate through the new stock details
     stockData.map(([expireDate, stock]) => {
@@ -66,3 +67,5 @@ export const addNewMedicine = async (medicineData: {
     return await newMedicine.save();
   }
 };
+export const deleteMedicineById = (id: string) =>
+  MedicineModel.findOneAndDelete({ _id: id });

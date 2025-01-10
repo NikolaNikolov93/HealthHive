@@ -1,6 +1,10 @@
 // routes/medicineRoutes.ts
 import express, { Request, Response } from "express";
-import { addNewMedicine, getAllMedicines } from "../services/medicineServices";
+import {
+  addNewMedicine,
+  deleteMedicineById,
+  getAllMedicines,
+} from "../services/medicineServices";
 import authenticateAdmin from "../middlewares/authAdmin";
 
 const router = express.Router();
@@ -37,8 +41,15 @@ router.post(
   authenticateAdmin,
   async (req: Request, res: Response): Promise<void> => {
     try {
-      const { name, brand, description, price, category, stockDetails } =
-        req.body;
+      const {
+        name,
+        brand,
+        description,
+        price,
+        stock,
+        expirationDate,
+        category,
+      } = req.body;
 
       // Ensure all required fields are provided
       if (
@@ -47,11 +58,14 @@ router.post(
         !description ||
         !price ||
         !category ||
-        !stockDetails
+        !stock ||
+        !expirationDate
       ) {
         res.status(400).json({ error: "All fields are required." });
         return;
       }
+      const stockDetails = new Map();
+      stockDetails.set(expirationDate, stock);
 
       // Add the new medicine
       const newMedicine = await addNewMedicine({
@@ -64,6 +78,32 @@ router.post(
       });
 
       res.status(201).json(newMedicine);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        res.status(500).json({ error: err.message });
+      } else {
+        res.status(500).json({ error: "An unknown error occurred" });
+      }
+    }
+  }
+);
+
+router.delete(
+  "/delete/:id",
+  authenticateAdmin,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+
+      // Call the service to delete the medicine
+      const deletedMedicine = await deleteMedicineById(id);
+
+      if (!deletedMedicine) {
+        res.status(404).json({ error: "Medicine not found" });
+        return;
+      }
+
+      res.status(200).json({ message: "Medicine deleted successfully" });
     } catch (err: unknown) {
       if (err instanceof Error) {
         res.status(500).json({ error: err.message });
