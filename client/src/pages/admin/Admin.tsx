@@ -3,8 +3,11 @@ import {
   AdminFrom,
   AdmingFormWrapper,
   AdmingPageContainer,
+  Input,
 } from "./Admin.styles";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login as loginAction } from "../../redux/user/userSlice";
 
 const Admin = () => {
   // State hooks to manage form values and error message
@@ -14,6 +17,8 @@ const Admin = () => {
 
   // useNavigate hook for programmatically navigating after login
   const navigate = useNavigate();
+  // useDispatch used to change the redux state
+  const dispatch = useDispatch();
 
   // Handle the form submission
   const handleLogin = async (e: React.FormEvent) => {
@@ -38,13 +43,14 @@ const Admin = () => {
       }
 
       // On success, parse the response JSON
-      const data = await response.json();
+      const adminData = await response.json();
 
       // Check if the role is admin, if not, throw an error
-      if (data.role !== "admin") {
+      if (adminData.role !== "admin") {
         throw new Error("Admins only"); // If role is not admin, show error
       } else {
         // Redirect to the admin dashboard if login is successful and role is admin
+        dispatch(loginAction({ email: adminData.email, name: adminData.name }));
         navigate("/admin/dashboard");
       }
     } catch (err: any) {
@@ -61,24 +67,24 @@ const Admin = () => {
           {/* Display error message if exists */}
           {error && <p style={{ color: "red" }}>{error}</p>}
 
-          {/* Email input field */}
+          {/* Email Input field */}
           <div>
-            <input
+            <Input
               type="email"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Update email state on input change
+              onChange={(e) => setEmail(e.target.value)} // Update email state on Input change
               required
             />
           </div>
 
-          {/* Password input field */}
+          {/* Password Input field */}
           <div>
-            <input
+            <Input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Update password state on input change
+              onChange={(e) => setPassword(e.target.value)} // Update password state on Input change
               required
             />
           </div>

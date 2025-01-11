@@ -1,5 +1,15 @@
 import { useState } from "react";
 import { MedType } from "../../../types/types";
+import {
+  AddButton,
+  FormField,
+  Input,
+  RemoveButton,
+  StockField,
+  StyledForm,
+  SubmitButton,
+  TextArea,
+} from "./UpdateMedicineForm.styles";
 
 type UpdateMedicineFormProps = {
   medicine: MedType;
@@ -51,63 +61,63 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
   };
 
   return (
-    <form onSubmit={(e) => e.preventDefault()}>
-      <div>
+    <StyledForm onSubmit={(e) => e.preventDefault()}>
+      <FormField>
         <label>
           Name:
-          <input
+          <Input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </label>
-      </div>
-      <div>
+      </FormField>
+      <FormField>
         <label>
           Brand:
-          <input
+          <Input
             type="text"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
           />
         </label>
-      </div>
-      <div>
+      </FormField>
+      <FormField>
         <label>
           Description:
-          <textarea
+          <TextArea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </label>
-      </div>
-      <div>
+      </FormField>
+      <FormField>
         <label>
           Price:
-          <input
+          <Input
             type="number"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
           />
         </label>
-      </div>
-      <div>
+      </FormField>
+      <FormField>
         <label>Stock Details:</label>
         {stockDetails.map(([expireDate, stock], index) => (
-          <div key={expireDate + index}>
-            <input
+          <StockField key={expireDate + index}>
+            <Input
               type="date"
               value={expireDate}
               onChange={(e) => handleDateChange(index, e.target.value)}
             />
-            <input
+            <Input
               type="number"
               value={stock === "" ? "" : stock}
               onChange={(e) =>
                 handleStockChange(index, expireDate, Number(e.target.value))
               }
             />
-            <button
+            <RemoveButton
               type="button"
               onClick={() =>
                 setStockDetails(stockDetails.filter((_, i) => i !== index))
@@ -115,17 +125,17 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
             >
               {" "}
               Renmove
-            </button>
-          </div>
+            </RemoveButton>
+          </StockField>
         ))}
-        <button type="button" onClick={handleAddExpirationDate}>
+        <AddButton type="button" onClick={handleAddExpirationDate}>
           Add Expiration Date
-        </button>
-      </div>
-      <button type="button" onClick={handleSubmit}>
+        </AddButton>
+      </FormField>
+      <SubmitButton type="button" onClick={handleSubmit}>
         Update
-      </button>
-    </form>
+      </SubmitButton>
+    </StyledForm>
   );
 };
 
