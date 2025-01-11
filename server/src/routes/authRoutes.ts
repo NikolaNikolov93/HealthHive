@@ -1,127 +1,53 @@
 import express, { Request, Response } from "express";
-import { UserModel } from "../models/User";
-import { hashPassword, comparePassword } from "../utils/bcrypt"; // Import bcrypt utilities for password hashing and comparison
-import { generateToken } from "../utils/jwt"; // Import JWT utility to generate tokens
-import { createUser, getUserByEmail, getUsers } from "../services/userService"; // Import user service functions for creating and fetching users
-import authenticateAdmin from "../middlewares/authAdmin";
+import authenticateAdmin from "../middlewares/authAdmin"; // Middleware to verify if the user is an authenticated admin
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/userController"; // Import user-related controller functions
+import { fetchAllUsers, loginAdmin } from "../controllers/adminController"; // Import admin-related controller functions
 
-const router = express.Router();
-
-router.get(
-  "/users",
-  authenticateAdmin,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const users = await getUsers();
-      res.json(users);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(500).json({ error: "An unknown error occurred" });
-      }
-    }
-  }
-);
+const router = express.Router(); // Initialize the Express router
 
 /**
- * @route POST /auth/register
+ * @route GET /users
+ * @description Fetch a list of all users
+ * @access Protected - Admin only
+ * @middleware authenticateAdmin - Verifies admin authentication
+ * @controller fetchAllUsers - Handles fetching all users
+ */
+router.get("/users", authenticateAdmin, fetchAllUsers);
+
+/**
+ * @route POST /admin/login
+ * @description Admin login endpoint
+ * @access Public
+ * @controller loginAdmin - Handles admin login logic
+ */
+router.post("/admin/login", loginAdmin);
+
+/**
+ * @route POST /register
  * @description Register a new user
  * @access Public
+ * @controller registerUser - Handles user registration
  */
-router.post("/register", async (req: Request, res: Response): Promise<any> => {
-  const { name, email, password } = req.body;
-
-  try {
-    // Check if the user already exists based on the provided email
-    const existingUser = await getUserByEmail(email);
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists" }); // If user exists, send a 400 response with error message
-    }
-
-    // Hash the password before storing it
-    const hashedPassword = await hashPassword(password);
-
-    // Create the new user in the database
-    const newUser = await createUser({
-      name,
-      email,
-      password: hashedPassword,
-      role: "customer",
-      address: {
-        phone: "",
-      },
-    });
-
-    // Return success message with the newly created user details
-    return res
-      .status(201)
-      .json({ message: "User registered successfully", newUser });
-  } catch (err) {
-    // If an error occurs during registration, send a 500 server error response
-    return res.status(500).json({ error: "Server error" });
-  }
-});
+router.post("/register", registerUser);
 
 /**
- * @route POST /auth/login
- * @description Login a user
+ * @route POST /login
+ * @description User login endpoint
  * @access Public
+ * @controller loginUser - Handles user login logic
  */
-router.post("/login", async (req: Request, res: Response): Promise<any> => {
-  const { email, password } = req.body;
-
-  try {
-    // Find the user in the database by email
-    const user = await getUserByEmail(email);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" }); // If no user is found, return a 404 response
-    }
-
-    // Compare the provided password with the stored hashed password
-    const isMatch = await comparePassword(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Invalid credentials" }); // If passwords don't match, return a 401 unauthorized response
-    }
-
-    // Generate a JWT token with the user's ID and role
-    const token = generateToken({ id: user._id, role: user.role });
-
-    // Send the token as an HTTP-only cookie to the client
-    res.cookie("authToken", token, {
-      httpOnly: true, // Ensure the cookie is accessible only by the server
-      maxAge: 3600000, // Set the cookie expiration to 1 hour (3600000 ms)
-      sameSite: "strict", // Apply strict SameSite policy for cookie security
-    });
-
-    // Return success message and the user's role
-    return res.json({
-      message: "Login successful",
-      role: user.role,
-      name: user.name,
-      id: user._id,
-    });
-  } catch (err) {
-    // If an error occurs during login, send a 500 server error response
-    return res.status(500).json({ error: "Server error" });
-  }
-});
+router.post("/login", loginUser);
 
 /**
- * @route POST /auth/logout
- * @description Logout a user (clear the auth token)
+ * @route POST /logout
+ * @description User logout endpoint (clears the authentication token)
  * @access Public
+ * @controller logoutUser - Handles user logout logic
  */
-router.post("/logout", (req: Request, res: Response): void => {
-  // Clear the "authToken" cookie by setting it to an empty value with a past expiration date
-  res.cookie("authToken", "", {
-    httpOnly: true, // Ensure it's still HTTP-only
-    expires: new Date(0), // Set the expiration date to a past date
-    sameSite: "strict", // Maintain the SameSite policy
-  });
+router.post("/logout", logoutUser);
 
-  // Respond with a success message
-  res.status(200).json({ message: "Logout successful" });
-});
-
-export default router;
+export default router; // Export the router for use in the application

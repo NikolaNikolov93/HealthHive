@@ -23,6 +23,15 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
     updatedStock[index] = [key, value ? Number(value) : ""];
     setStockDetails(updatedStock);
   };
+  const handleDateChange = (index: number, newDate: string) => {
+    const updatedStock = [...stockDetails];
+    updatedStock[index] = [newDate, updatedStock[index][1]]; // Update the date while keeping the stock unchanged
+    setStockDetails(updatedStock);
+  };
+  const handleAddExpirationDate = () => {
+    setStockDetails([...stockDetails, ["", ""]]); // Add a new empty stock entry
+    console.log(stockDetails);
+  };
 
   const handleSubmit = async () => {
     const updatedMedicine = {
@@ -85,8 +94,12 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
       <div>
         <label>Stock Details:</label>
         {stockDetails.map(([expireDate, stock], index) => (
-          <div key={expireDate}>
-            <input type="text" value={expireDate} readOnly />
+          <div key={expireDate + index}>
+            <input
+              type="date"
+              value={expireDate}
+              onChange={(e) => handleDateChange(index, e.target.value)}
+            />
             <input
               type="number"
               value={stock === "" ? "" : stock}
@@ -94,8 +107,20 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
                 handleStockChange(index, expireDate, Number(e.target.value))
               }
             />
+            <button
+              type="button"
+              onClick={() =>
+                setStockDetails(stockDetails.filter((_, i) => i !== index))
+              }
+            >
+              {" "}
+              Renmove
+            </button>
           </div>
         ))}
+        <button type="button" onClick={handleAddExpirationDate}>
+          Add Expiration Date
+        </button>
       </div>
       <button type="button" onClick={handleSubmit}>
         Update

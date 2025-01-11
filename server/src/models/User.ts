@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
-  _id: mongoose.Types.ObjectId; // Custom string IDs (e.g., "admin1", "customer2")
+  _id: mongoose.Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -11,7 +11,7 @@ export interface IUser extends Document {
   };
   orderHistory?: Array<any>;
   wishlist?: Array<any>;
-  permissions?: Array<string>; // Only for admin
+  permissions?: Array<string>;
   createdAt: Date;
   updatedAt: Date;
 }
