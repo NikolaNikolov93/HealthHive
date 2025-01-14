@@ -10,6 +10,7 @@ import {
   SubmitButton,
   TextArea,
 } from "./UpdateMedicineForm.styles";
+import { useUpdateMedicine } from "../../../hooks/useUpdateMedicine";
 
 type UpdateMedicineFormProps = {
   medicine: MedType;
@@ -28,6 +29,8 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
     Object.entries(medicine.stockDetails)
   );
 
+  const updateMedicineMutation = useUpdateMedicine();
+
   const handleStockChange = (index: number, key: string, value: number) => {
     const updatedStock = [...stockDetails];
     updatedStock[index] = [key, value ? Number(value) : ""];
@@ -40,11 +43,11 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
   };
   const handleAddExpirationDate = () => {
     setStockDetails([...stockDetails, ["", ""]]); // Add a new empty stock entry
-    console.log(stockDetails);
   };
 
   const handleSubmit = async () => {
     const updatedMedicine = {
+      id: medicine._id,
       name,
       brand,
       description,
@@ -53,11 +56,12 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
       category: medicine.category, // Optional if category remains unchanged
     };
 
-    // Call API or mutation to update the medicine in the database
-    console.log("Updated Medicine Data: ", updatedMedicine);
-
-    // Close the modal after successful update
-    onClose();
+    updateMedicineMutation.mutate(updatedMedicine, {
+      onSuccess: () => {
+        console.log("Medicine updated successfully!");
+        onClose();
+      },
+    });
   };
 
   return (

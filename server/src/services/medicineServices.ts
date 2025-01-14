@@ -42,7 +42,6 @@ export const addNewMedicine = async (medicineData: {
   if (existingMedicine) {
     // If the medicine exists, update its stock details
     const stockData = Array.from(medicineData.stockDetails.entries());
-    console.log(stockData);
 
     // Iterate through the new stock details
     stockData.map(([expireDate, stock]) => {
@@ -69,3 +68,19 @@ export const addNewMedicine = async (medicineData: {
 };
 export const deleteMedicineById = (id: string) =>
   MedicineModel.findOneAndDelete({ _id: id });
+
+export const updateMedicineById = async (
+  id: string,
+  updatedData: Record<string, any>
+) => {
+  try {
+    const medicine = await MedicineModel.findByIdAndUpdate(id, updatedData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure the updated data is validated
+    });
+
+    return medicine;
+  } catch (err) {
+    throw new Error("Failed to update the medicine");
+  }
+};

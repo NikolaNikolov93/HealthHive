@@ -1,117 +1,48 @@
 // routes/medicineRoutes.ts
-import express, { Request, Response } from "express";
-import {
-  addNewMedicine,
-  deleteMedicineById,
-  getAllMedicines,
-} from "../services/medicineServices";
+import express from "express";
+
 import authenticateAdmin from "../middlewares/authAdmin";
+import {
+  addMedicine,
+  deleteMedicine,
+  fetchAllMedicines,
+  updateMedicine,
+} from "../controllers/medicineController";
 
 const router = express.Router();
 
 /**
- * @route GET /getMeds
+ * @route GET /getAll
  * @description Fetch all medicines from the database
- * @access Public
+ * @access Admin
+ * @middleware authenticateAdmin - Ensures only admins can access this route
  */
-router.get(
-  "/getAll",
-  authenticateAdmin,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const meds = await getAllMedicines();
-      res.json(meds);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(500).json({ error: "An unknown error occurred" });
-      }
-    }
-  }
-);
+router.get("/getAll", authenticateAdmin, fetchAllMedicines);
 
 /**
  * @route POST /add
  * @description Add a new medicine to the database
  * @access Admin
+ * @middleware authenticateAdmin - Ensures only admins can access this route
  */
-router.post(
-  "/add",
-  authenticateAdmin,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const {
-        name,
-        brand,
-        description,
-        price,
-        stock,
-        expirationDate,
-        category,
-      } = req.body;
+router.post("/add", authenticateAdmin, addMedicine);
 
-      // Ensure all required fields are provided
-      if (
-        !name ||
-        !brand ||
-        !description ||
-        !price ||
-        !category ||
-        !stock ||
-        !expirationDate
-      ) {
-        res.status(400).json({ error: "All fields are required." });
-        return;
-      }
-      const stockDetails = new Map();
-      stockDetails.set(expirationDate, stock);
+/**
+ * @route DELETE /delete/:id
+ * @description Delete a medicine by ID
+ * @access Admin
+ * @middleware authenticateAdmin - Ensures only admins can access this route
+ * @param {string} id - The unique identifier of the medicine to be deleted
+ */
+router.delete("/delete/:id", authenticateAdmin, deleteMedicine);
 
-      // Add the new medicine
-      const newMedicine = await addNewMedicine({
-        name,
-        brand,
-        description,
-        price,
-        category,
-        stockDetails,
-      });
-
-      res.status(201).json(newMedicine);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(500).json({ error: "An unknown error occurred" });
-      }
-    }
-  }
-);
-
-router.delete(
-  "/delete/:id",
-  authenticateAdmin,
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const { id } = req.params;
-
-      // Call the service to delete the medicine
-      const deletedMedicine = await deleteMedicineById(id);
-
-      if (!deletedMedicine) {
-        res.status(404).json({ error: "Medicine not found" });
-        return;
-      }
-
-      res.status(200).json({ message: "Medicine deleted successfully" });
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        res.status(500).json({ error: err.message });
-      } else {
-        res.status(500).json({ error: "An unknown error occurred" });
-      }
-    }
-  }
-);
+/**
+ * @route PUT /update/:id
+ * @description Update a medicine's details by ID
+ * @access Admin
+ * @middleware authenticateAdmin - Ensures only admins can access this route
+ * @param {string} id - The unique identifier of the medicine to be updated
+ */
+router.put("/update/:id", authenticateAdmin, updateMedicine);
 
 export default router;
