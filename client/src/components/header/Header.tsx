@@ -5,6 +5,8 @@ import { CiShoppingCart } from "react-icons/ci";
 import { logout } from "../../services/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { logout as logoutAction } from "../../redux/user/userSlice";
+import { useState } from "react";
+import Categories from "../../pages/categories/Categories";
 
 const HeaderContainer = styled.header`
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Adjust the values as needed */
@@ -45,13 +47,18 @@ const Logo = styled.div`
   }
 `;
 
-const Categories = styled.div`
-  a {
+const CategoriesItem = styled.div`
+  button {
     display: flex;
     align-items: center;
+    background-color: white;
   }
   img {
     width: 70px;
+  }
+  :hover {
+    color: #8ed8a6;
+    cursor: pointer;
   }
 `;
 const SearchBarWrapper = styled.div`
@@ -121,6 +128,7 @@ const Header = () => {
   const user = useSelector((state: any) => state.user.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -132,18 +140,22 @@ const Header = () => {
 
   return (
     <HeaderContainer>
+      <Categories
+        isCategoriesOpen={isCategoriesOpen}
+        handleCategoriesState={() => setIsCategoriesOpen(false)}
+      ></Categories>
       <NavContainer>
         <Logo>
           <Link to="/">
             <img src="/logo.png" alt="" />
           </Link>
         </Logo>
-        <Categories>
-          <Link to="/categories">
+        <CategoriesItem>
+          <button onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}>
             <span>Категории</span>
             <img src="/categories3.png" alt="" />
-          </Link>
-        </Categories>
+          </button>
+        </CategoriesItem>
         <SearchBarWrapper>
           <SearchBar type="text" placeholder="Търсене..." />
           <SearchButton>
