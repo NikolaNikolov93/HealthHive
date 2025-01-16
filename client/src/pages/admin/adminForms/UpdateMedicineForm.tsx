@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { MedType } from "../../../types/types";
 import {
   AddButton,
@@ -11,131 +11,209 @@ import {
   TextArea,
 } from "./UpdateMedicineForm.styles";
 import { useUpdateMedicine } from "../../../hooks/useUpdateMedicine";
+import useForm from "../../../hooks/useForm";
+import ErrorSection from "../../../components/errorSection/ErrorSection";
+import { validateInput } from "../../../helpers/validateInputs";
 
 type UpdateMedicineFormProps = {
-  medicine: MedType;
-  onClose: () => void;
+  medicine: MedType; // Medicine data passed from the parent component
+  onClose: () => void; // Function to close the form
 };
 
 const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
   medicine,
   onClose,
 }) => {
-  const [name, setName] = useState(medicine.name);
-  const [brand, setBrand] = useState(medicine.brand);
-  const [description, setDescription] = useState(medicine.description);
-  const [price, setPrice] = useState(medicine.price);
-  const [stockDetails, setStockDetails] = useState(
-    Object.entries(medicine.stockDetails)
-  );
+  // Initialize the useForm hook with initial values from the medicine prop
+  const { values, handleChange, setValues } = useForm({
+    name: medicine.name,
+    brand: medicine.brand,
+    description: medicine.description,
+    price: medicine.price,
+    stockDetails: Object.entries(medicine.stockDetails), // Convert stockDetails to an array for easier manipulation
+    category: medicine.category, // Category remains unchanged
+  });
 
+  const [errors, setErrors] = useState<any[]>([]); // State to store validation errors
+
+  // Hook to handle the update mutation
   const updateMedicineMutation = useUpdateMedicine();
 
-  const handleStockChange = (index: number, key: string, value: number) => {
-    const updatedStock = [...stockDetails];
-    updatedStock[index] = [key, value ? Number(value) : ""];
-    setStockDetails(updatedStock);
-  };
-  const handleDateChange = (index: number, newDate: string) => {
-    const updatedStock = [...stockDetails];
-    updatedStock[index] = [newDate, updatedStock[index][1]]; // Update the date while keeping the stock unchanged
-    setStockDetails(updatedStock);
-  };
-  const handleAddExpirationDate = () => {
-    setStockDetails([...stockDetails, ["", ""]]); // Add a new empty stock entry
+  // Update stockDetails at a specific index
+  const handleStockChange = (
+    index: number,
+    key: string,
+    value: number | string
+  ) => {
+    const updatedStock = [...values.stockDetails];
+    updatedStock[index] = [key, value === "" ? 0 : Number(value)];
+    setValues({ stockDetails: updatedStock });
   };
 
+  // Add a new stock entry
+  const handleAddStock = () => {
+    setValues({ stockDetails: [...values.stockDetails, ["", ""]] });
+  };
+
+  // Remove a stock entry at a specific index
+  const handleRemoveStock = (index: number) => {
+    setValues({
+      stockDetails: values.stockDetails.filter((_, i) => i !== index),
+    });
+  };
+
+  // Handle form submission
   const handleSubmit = async () => {
+    if (!validateForm()) return; // Prevent submission if there are validation errors
     const updatedMedicine = {
-      id: medicine._id,
-      name,
-      brand,
-      description,
-      price,
-      stockDetails: new Map(stockDetails),
-      category: medicine.category, // Optional if category remains unchanged
+      id: medicine._id, // Pass the ID to identify the medicine to update
+      ...values,
+      stockDetails: new Map(values.stockDetails), // Convert stockDetails back to a Map before submitting
     };
 
+    // Perform the mutation to update the medicine
     updateMedicineMutation.mutate(updatedMedicine, {
       onSuccess: () => {
         console.log("Medicine updated successfully!");
-        onClose();
+        onClose(); // Close the form on successful update
       },
     });
+  };
+  const validateForm = () => {
+    const newErrors: any[] = [];
+
+    // Validate name
+    newErrors.push(...validateInput(values.name, "name"));
+
+    // Validate brand
+    newErrors.push(...validateInput(values.brand, "brand"));
+
+    // Validate price
+    newErrors.push(...validateInput(values.price.toString(), "price"));
+
+    // Validate description
+    newErrors.push(...validateInput(values.description, "description"));
+
+    // Validate stock details
+    values.stockDetails.forEach(([expireDate, stock], index) => {
+      newErrors.push(
+        ...validateInput(`${expireDate}:${stock}`, "stock", "", "", index)
+      );
+    });
+
+    setErrors(newErrors.filter((error) => !error.isFixed));
+
+    return newErrors.every((error) => error.isFixed);
   };
 
   return (
     <StyledForm onSubmit={(e) => e.preventDefault()}>
+      {/* Render ErrorSection for validation errors */}
+      <ErrorSection errors={errors} />
+      {/* Form field for Name */}
       <FormField>
         <label>
           Name:
           <Input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={values.name}
+            onChange={(e) => handleChange("name", e.target.value)}
           />
         </label>
       </FormField>
+
+      {/* Form field for Brand */}
       <FormField>
         <label>
           Brand:
           <Input
             type="text"
-            value={brand}
-            onChange={(e) => setBrand(e.target.value)}
+            value={values.brand}
+            onChange={(e) => handleChange("brand", e.target.value)}
           />
         </label>
       </FormField>
+
+      {/* Form field for Description */}
       <FormField>
         <label>
           Description:
           <TextArea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={values.description}
+            onChange={(e) => handleChange("description", e.target.value)}
           />
         </label>
       </FormField>
+
+      {/* Form field for Price */}
       <FormField>
         <label>
           Price:
           <Input
             type="number"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
+            value={values.price === 0 ? "" : values.price} // Show an empty string if price is 0
+            onChange={(e) =>
+              handleChange(
+                "price",
+                e.target.value === "" ? "" : Number(e.target.value)
+              )
+            }
           />
         </label>
       </FormField>
+
+      {/* Dynamic form fields for Stock Details */}
       <FormField>
         <label>Stock Details:</label>
-        {stockDetails.map(([expireDate, stock], index) => (
+        {values.stockDetails.map(([expireDate, stock], index) => (
           <StockField key={expireDate + index}>
             <Input
               type="date"
               value={expireDate}
-              onChange={(e) => handleDateChange(index, e.target.value)}
-            />
-            <Input
-              type="number"
-              value={stock === "" ? "" : stock}
               onChange={(e) =>
-                handleStockChange(index, expireDate, Number(e.target.value))
+                handleStockChange(index, e.target.value, stock as number)
               }
             />
+            {stock === 0 ? (
+              <Input
+                type={"text"}
+                value={"Out of stock"} // Display empty string for 0
+                onChange={(e) =>
+                  handleStockChange(
+                    index,
+                    expireDate,
+                    e.target.value === "" ? "" : Number(e.target.value)
+                  )
+                }
+              />
+            ) : (
+              <Input
+                type={"number"}
+                value={stock === 0 ? "" : stock} // Display empty string for 0
+                onChange={(e) =>
+                  handleStockChange(
+                    index,
+                    expireDate,
+                    e.target.value === "" ? "" : Number(e.target.value)
+                  )
+                }
+              />
+            )}
+
             <RemoveButton
               type="button"
-              onClick={() =>
-                setStockDetails(stockDetails.filter((_, i) => i !== index))
-              }
+              onClick={() => handleRemoveStock(index)}
             >
-              {" "}
-              Renmove
+              Remove
             </RemoveButton>
           </StockField>
         ))}
-        <AddButton type="button" onClick={handleAddExpirationDate}>
+        <AddButton type="button" onClick={handleAddStock}>
           Add Expiration Date
         </AddButton>
       </FormField>
+
+      {/* Submit button */}
       <SubmitButton type="button" onClick={handleSubmit}>
         Update
       </SubmitButton>

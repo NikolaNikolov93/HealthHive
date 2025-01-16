@@ -11,7 +11,9 @@ export const useAddMedicine = () => {
       price: number;
       stock: number;
       expirationDate: string;
-      category: string;
+      mainCategory: string;
+      subCategory: string;
+      generalUsage: string;
     }) => {
       const response = await fetch("http://localhost:5000/medicines/add", {
         method: "POST",

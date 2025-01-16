@@ -5,6 +5,7 @@ import { MedType } from "../../../types/types";
 import StockDetails from "./StockDetails";
 import {
   Button,
+  ButtonWrapper,
   Table,
   TableBody,
   TableCell,
@@ -61,6 +62,8 @@ const MedicinesTable: React.FC<MedicinesTableProps> = ({ searchTerm }) => {
 
             <TableHeaderCell>Expiration Date</TableHeaderCell>
             <TableHeaderCell>Category</TableHeaderCell>
+            <TableHeaderCell>Sub Category</TableHeaderCell>
+            <TableHeaderCell>Specific condition</TableHeaderCell>
             <TableHeaderCell>Actions</TableHeaderCell>
           </TableRow>
         </TableHeader>
@@ -71,17 +74,27 @@ const MedicinesTable: React.FC<MedicinesTableProps> = ({ searchTerm }) => {
                 <TableCell>{medicine.name}</TableCell>
                 <TableCell>{medicine.brand}</TableCell>
                 <TableCell>{medicine.description}</TableCell>
-                <TableCell>${medicine.price}</TableCell>
+                <TableCell>${medicine.price.toFixed(2)}</TableCell>
 
                 <TableCell>
                   <StockDetails stockDetails={medicine.stockDetails} />
                 </TableCell>
-                <TableCell>{medicine.category}</TableCell>
+                <TableCell>{medicine.category.mainCategory}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleUpdate(medicine)}>Update</Button>
-                  <Button onClick={() => handleDelete(medicine._id)}>
-                    Delete
-                  </Button>
+                  {medicine.category.subCategory.generalName}
+                </TableCell>
+                <TableCell>
+                  {medicine.category.subCategory.specificConditions}
+                </TableCell>
+                <TableCell>
+                  <ButtonWrapper>
+                    <Button onClick={() => handleUpdate(medicine)}>
+                      Update
+                    </Button>
+                    <Button onClick={() => handleDelete(medicine._id)}>
+                      Delete
+                    </Button>
+                  </ButtonWrapper>
                 </TableCell>
               </TableRow>
             );

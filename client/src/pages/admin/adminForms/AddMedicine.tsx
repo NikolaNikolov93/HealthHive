@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAddMedicine } from "../../../hooks/useAddMedicine";
+import { CategoryData, categoryData } from "../../../constants/contants";
 
 const AddMedicine = () => {
   const [name, setName] = useState("");
@@ -8,7 +9,9 @@ const AddMedicine = () => {
   const [price, setPrice] = useState<string>("");
   const [stockDetails, setStockDetails] = useState<string>("");
   const [expirationDate, setExpirationDate] = useState("");
-  const [category, setCategory] = useState("");
+  const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [generalUsage, setGeneralUsage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { mutate: addMedicine, isError } = useAddMedicine();
@@ -24,7 +27,9 @@ const AddMedicine = () => {
         price: parseFloat(price), // Convert price string to number
         stock: parseFloat(stockDetails),
         expirationDate,
-        category,
+        mainCategory,
+        subCategory,
+        generalUsage,
       };
 
       addMedicine(newMedicine); // Call the mutation function to add the medicine
@@ -98,15 +103,62 @@ const AddMedicine = () => {
         />
       </div>
       <div>
-        <label htmlFor="category">Category:</label>
-        <input
-          id="category"
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+        <label htmlFor="category">Main category:</label>
+        <select
+          id="mainCategory"
+          value={mainCategory}
+          onChange={(e) => setMainCategory(e.target.value)}
           required
-        />
+        >
+          <option value="">Select Main Category</option>
+          {Object.keys(categoryData).map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
       </div>
+      <div>
+        <label htmlFor="category">Sub category:</label>
+        <select
+          id="subCategory"
+          value={subCategory}
+          onChange={(e) => setSubCategory(e.target.value)}
+          required
+          disabled={!mainCategory}
+        >
+          <option value="">Select Sub Category</option>
+          {mainCategory &&
+            Object.keys(categoryData[mainCategory as keyof CategoryData]).map(
+              (subCat) => (
+                <option key={subCat} value={subCat}>
+                  {subCat}
+                </option>
+              )
+            )}
+        </select>
+      </div>
+      <div>
+        <label htmlFor="category">General usage:</label>
+        <select
+          id="generalName"
+          value={generalUsage}
+          onChange={(e) => setGeneralUsage(e.target.value)}
+          required
+          disabled={!subCategory}
+        >
+          <option value="">Select General Name</option>
+          {subCategory &&
+            categoryData[mainCategory as keyof CategoryData][subCategory].map(
+              (generalName) => (
+                <option key={generalName} value={generalName}>
+                  {generalName}
+                </option>
+              )
+            )}
+        </select>
+      </div>
+
       <div>
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Adding..." : "Add Medicine"}

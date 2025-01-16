@@ -39,10 +39,11 @@ export const TableRow = styled.tr`
 export const TableCell = styled.td`
   padding: 10px;
   border: 1px solid #ddd;
+  text-align: center; /* Horizontal centering */
+  vertical-align: middle; /* Vertical centering */
 `;
 
 export const Button = styled.button`
-  margin: 0 5px;
   padding: 5px 10px;
   cursor: pointer;
   border: none;
@@ -57,4 +58,8 @@ export const Button = styled.button`
   &:nth-child(2) {
     background-color: #dc3545;
   }
+`;
+export const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 0.4em;
 `;
