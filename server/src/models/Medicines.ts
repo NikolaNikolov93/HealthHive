@@ -22,7 +22,13 @@ const MedicineSchema: Schema = new Schema({
     of: Number,
     required: true,
   },
-  category: { type: String, required: true },
+  category: {
+    mainCategory: { type: String, required: true },
+    subCategory: {
+      generalName: { type: String, required: true },
+      specificConditions: { type: String, required: true },
+    },
+  },
 });
 
 // Create the Medicine model using the schema and interface
