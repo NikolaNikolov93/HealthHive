@@ -1,123 +1,191 @@
 export const categoryData: CategoryData = {
-  Medications: {
-    "Pain Relievers": [
-      "Headache Relief",
-      "Muscle Pain Relief",
-      "Joint Pain Relief",
+  Лекарства: {
+    "Облекчаване на болката": [
+      "Парацетамол",
+      "Ибупрофен",
+      "Аспирин",
+      "Локални обезболяващи",
     ],
-    "Psychiatric Medications": ["Depression", "Anxiety", "Bipolar Disorder"],
-    "Anticancer Drugs": ["Chemotherapy", "Targeted Therapy", "Immunotherapy"],
-    "Diabetes Medications": [
-      "Blood Sugar Control",
-      "Insulin Therapy",
-      "Oral Hypoglycemics",
+    "Средства за настинка и грип": [
+      "Сиропи за кашлица",
+      "Таблетки против запушване",
+      "Назални спрейове",
+      "Бонбони за гърло",
     ],
-    Antivirals: ["Cold Sores", "Flu", "HIV", "Hepatitis C"],
-    "Hormonal Medications": [
-      "Menopause",
-      "Thyroid Disorders",
-      "Testosterone Replacement",
+    "Антихистамини и алергии": [
+      "Антихистамини",
+      "Назални спрейове",
+      "Капки за очи",
+      "Кремове за кожни алергии",
     ],
-  },
-  HealthProducts: {
-    "Vitamins and Supplements": [
-      "Immune Support",
-      "Bone Health",
-      "Energy Boost",
-      "Skin Health",
+    "Храносмилателни средства": [
+      "Антиациди",
+      "Лаксативи",
+      "Средства против диария",
+      "Таблетки против подуване",
     ],
-    "Cough and Cold Remedies": [
-      "Cough Suppressants",
-      "Decongestants",
-      "Expectorants",
-    ],
-    "Heart and Blood Pressure": [
-      "Cholesterol Control",
-      "Blood Pressure Regulation",
-      "Heart Health",
-    ],
-    "Digestive Health": [
-      "Gut Health",
-      "Acid Reflux",
-      "Bloating",
-      "Constipation Relief",
-    ],
-    "Allergy Medication": [
-      "Seasonal Allergies",
-      "Hay Fever",
-      "Dust Mite Allergies",
-    ],
-    "Lung Health": ["Asthma Relief", "COPD", "Breathing Support"],
-    "Weight Loss": ["Appetite Control", "Metabolism Boost", "Fat Burning"],
-    "Anti-inflammatory Drugs": [
-      "Arthritis Relief",
-      "Injury Recovery",
-      "Swelling Reduction",
+    "Продукти за първа помощ": [
+      "Антисептични кремове",
+      "Превръзки",
+      "Разтвори за почистване на рани",
+      "Спрейове за изгаряния",
     ],
   },
-  PersonalCare: {
-    SkinCare: [
-      "Anti-aging",
-      "Acne Treatment",
-      "Hydration",
-      "Pigmentation Treatment",
-      "Dry Skin",
+  "Здраве и уелнес": {
+    "Витамини и добавки": [
+      "Подсилване на имунитета",
+      "Мултивитамини",
+      "Енергийни добавки",
+      "Здравина на костите",
     ],
-    HairCare: [
-      "Hair Growth",
-      "Shiny Hair",
-      "Dandruff Treatment",
-      "Frizz Control",
+    "Храносмилателно здраве": [
+      "Пробиотици",
+      "Фибри",
+      "Облекчаване на киселини",
+      "Лаксативи",
     ],
-    "Oral Health": [
-      "Teeth Whitening",
-      "Gum Care",
-      "Fresh Breath",
-      "Cavity Prevention",
+    "Облекчаване на болката": [
+      "Облекчаване на главоболие",
+      "Облекчаване на мускулна болка",
+      "Облекчаване на болки в ставите",
+      "Намаляване на температура",
     ],
-    "Eye Care": ["Eye Strain", "Dry Eyes", "Dark Circles", "Eye Brightening"],
-    "Cold Sore Treatments": ["Healing", "Pain Relief", "Antiviral"],
+    "Алергии и синуси": [
+      "Антихистамини",
+      "Деконгестанти",
+      "Назални спрейове",
+      "Капки за очи",
+    ],
+    "Настинка и грип": [
+      "Сиропи за кашлица",
+      "Бонбони за гърло",
+      "Таблетки против запушване",
+      "Термометри",
+    ],
+    "Сън и стрес": [
+      "Мелатонин",
+      "Билкови средства за сън",
+      "Масла за облекчаване на стреса",
+      "Добавки за релаксация",
+    ],
   },
-  Vaccines: {
-    "Flu Vaccine": ["Seasonal Protection", "Flu Strain Prevention"],
-    "Hepatitis Vaccine": [
-      "Hepatitis A",
-      "Hepatitis B",
-      "Hepatitis C Prevention",
+  "Лична грижа": {
+    "Грижа за кожата": [
+      "Хидратиращи кремове",
+      "Слънцезащитни продукти",
+      "Продукти против акне",
+      "Анти-ейдж кремове",
     ],
-    "COVID-19 Vaccine": ["Protection Against COVID-19", "Variants Prevention"],
-    "Pneumococcal Vaccine": ["Pneumonia Prevention", "Respiratory Health"],
-    "HPV Vaccine": ["Cervical Cancer Prevention", "HPV-related Cancers"],
+    "Грижа за косата": [
+      "Шампоани и балсами",
+      "Масла за коса",
+      "Продукти против косопад",
+      "Контрол на пърхота",
+    ],
+    "Орална грижа": [
+      "Избелващи пасти за зъби",
+      "Вода за уста",
+      "Глави за електрически четки",
+      "Зъбен конец",
+    ],
+    "Мъжка козметика": [
+      "Кремове за бръснене",
+      "Грижа за брада",
+      "Мъжки кремове за лице",
+      "Дезодоранти",
+    ],
+    "Грижа за жените": [
+      "Феминилна хигиена",
+      "Менструални продукти",
+      "Интимен гел",
+      "Изсветляващи продукти за кожа",
+    ],
   },
-  FertilityAndCessation: {
-    Smoking: [
-      "Nicotine Withdrawal",
-      "Quit Smoking Support",
-      "Smoking Cessation",
+  "Бебета и деца": {
+    "Бебешка грижа": [
+      "Пелени",
+      "Бебешки кремове",
+      "Бебешка формула",
+      "Облекчение при никнене на зъби",
     ],
-    "Fertility Treatments": [
-      "Ovulation Induction",
-      "Egg Quality",
-      "Sperm Health",
-      "IVF Support",
+    "Лекарства за деца": [
+      "Продукти за намаляване на температура",
+      "Сиропи за кашлица",
+      "Средства против алергии",
+      "Облекчаване на болка",
+    ],
+    "Детски витамини": [
+      "Дъвчащи мултивитамини",
+      "Омега-3 за деца",
+      "Калциеви добавки",
+      "Имунна подкрепа",
+    ],
+    "Бебешка храна": [
+      "Био бебешка храна",
+      "Пюрета",
+      "Бебешки закуски",
+      "Зърнени продукти за бебета",
+    ],
+  },
+  "Фитнес и спорт": {
+    "Тренировъчни основи": [
+      "Протеинови прахове",
+      "Добавки преди тренировка",
+      "Енергийни барове",
+      "Възстановителни напитки",
+    ],
+    "Спортно хранене": [
+      "BCAA добавки",
+      "Електролити",
+      "Креатин",
+      "Здраве на ставите",
+    ],
+    "Спортни аксесоари": [
+      "Ластици за тренировки",
+      "Постелки за йога",
+      "Ролки за разтягане",
+      "Фитнес тракери",
+    ],
+  },
+  "Пътуване и открито": {
+    "Здраве при пътуване": [
+      "Средства против прилошаване",
+      "Травъл размери за козметика",
+      "Комплекти за първа помощ",
+      "Репеленти против насекоми",
+    ],
+    Слънцезащита: [
+      "Слънцезащитни кремове",
+      "Лосиони след слънце",
+      "Балсами за устни със SPF",
+      "Шапки за пътуване",
+    ],
+    "Оборудване за открито": [
+      "Многократни бутилки за вода",
+      "Дезинфектанти за ръце",
+      "Охлаждащи кърпи",
+      "Раници",
     ],
   },
 };
 
 export type CategoryData = {
-  Medications: {
+  ["Здраве и уелнес"]: {
     [key: string]: string[];
   };
-  HealthProducts: {
+  ["Лична грижа"]: {
     [key: string]: string[];
   };
-  PersonalCare: {
+  ["Бебета и деца"]: {
     [key: string]: string[];
   };
-  Vaccines: {
+  ["Лекарства"]: {
     [key: string]: string[];
   };
-  FertilityAndCessation: {
+  ["Фитнес и спорт"]: {
+    [key: string]: string[];
+  };
+  ["Пътуване и открито"]: {
     [key: string]: string[];
   };
 };

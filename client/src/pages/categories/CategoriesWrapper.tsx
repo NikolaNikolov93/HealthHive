@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const CategoriesWrapper = ({
@@ -78,29 +78,16 @@ const CategoriesWrapper = ({
   );
 };
 
-const LinkList = styled.ul`
+const CategoriesList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5em; /* Matches spacing between items */
-  background-color: inherit; /* Consistent background color */
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-  border-top: 1px solid rgba(128, 128, 128, 0.2);
-  box-sizing: border-box;
+  position: relative;
 `;
-const StyledLink = styled(Link)`
-  text-decoration: none; /* Removes underline */
-  color: inherit; /* Inherits text color from the parent */
-  padding: 0.6em 0.4em;
 
-  &:hover {
-    background-color: #8ed8a6; /* Match hover effect of buttons */
-  }
-`;
 const SubcatList = styled.div`
-  min-width: 15em;
+  min-width: 16.5em;
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
   position: absolute;
   left: 100%;
   top: 0;
@@ -108,12 +95,12 @@ const SubcatList = styled.div`
   background-color: #fff;
   padding: 0em 0.4em;
 `;
-const CategoriesList = styled.div`
+const LinkList = styled.ul`
   display: flex;
   flex-direction: column;
-  position: relative;
-  min-width: 15em;
+  min-width: fit-content;
 `;
+
 export const CategoryButton = styled.button<{ isActive: boolean }>`
   position: relative;
   background-color: ${({ isActive }) =>

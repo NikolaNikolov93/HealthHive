@@ -1,6 +1,31 @@
 import MedicineModel, { IMedicine } from "../models/Medicines";
 
 /**
+ * Fetch medicines by category from the database.
+ * @param category The category to filter medicines by.
+ * @returns A promise that resolves to an array of medicines belonging to the specified category.
+ */
+export const getMedicinesByCategory = async (
+  mainCategory?: string,
+  subCategory?: string,
+  specificConditions?: string
+): Promise<IMedicine[]> => {
+  if (specificConditions) {
+    return await MedicineModel.find({
+      "category.subCategory.specificConditions": specificConditions,
+    }).exec();
+  } else if (subCategory) {
+    return await MedicineModel.find({
+      "category.subCategory.generalName": subCategory,
+    }).exec();
+  } else {
+    return await MedicineModel.find({
+      "category.mainCategory": mainCategory,
+    }).exec();
+  }
+};
+
+/**
  * Fetch all medicines from the database.
  * @returns A promise that resolves to an array of medicines.
  */
@@ -31,7 +56,7 @@ export const addNewMedicine = async (medicineData: {
   brand: string; // Brand of the medicine
   description: string; // Description of the medicine
   price: number; // Price of the medicine
-  category: string; // Category of the medicine
+  category: object; // Category of the medicine
   stockDetails: Map<string, number>; // Stock details with expiration dates as keys and quantities as values
 }): Promise<IMedicine> => {
   // Check if a medicine with the same name already exists in the database

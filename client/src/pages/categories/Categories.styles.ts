@@ -6,13 +6,13 @@ export const CategoriesContainer = styled.div`
   background-color: white;
   padding: 1em;
   height: 100%;
-  min-width: 15em;
+  min-width: 12.5em;
   font-size: 1.3em;
   font-weight: bold;
   display: flex;
   flex-direction: column;
-  gap: 1em;
   padding: 3em 1em;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 `;
 
 export const CloseMenuButton = styled.button`

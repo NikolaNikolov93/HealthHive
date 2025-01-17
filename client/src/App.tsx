@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import LoginFormComponent from "./components/form/loginForm/LoginForm";
 import RegisterFormComponent from "./components/form/registerForm/RegisterForm";
+import Medicines from "./pages/medicines/Medicines";
 
 function App() {
   return (
@@ -22,6 +23,12 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginFormComponent />} />
             <Route path="/register" element={<RegisterFormComponent />} />
+            <Route path="/:mainCategory/" element={<Medicines />} />
+            <Route path="/:mainCategory/:subCategory" element={<Medicines />} />
+            <Route
+              path="/:mainCategory/:subCategory/:specificConditions"
+              element={<Medicines />}
+            />
           </Routes>
         </Main>
         <Footer />

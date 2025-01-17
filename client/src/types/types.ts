@@ -4,8 +4,15 @@ export type MedType = {
   brand: string;
   description: string;
   price: number;
+  url?: string;
   stockDetails: Map<string, number>;
-  category: string;
+  category: {
+    mainCategory: string;
+    subCategory: {
+      generalName: string;
+      specificConditions: string;
+    };
+  };
 };
 
 export type UserType = {

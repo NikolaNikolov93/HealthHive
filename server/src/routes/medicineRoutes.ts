@@ -6,11 +6,22 @@ import {
   addMedicine,
   deleteMedicine,
   fetchAllMedicines,
+  fetchByMainCategory,
   updateMedicine,
 } from "../controllers/medicineController";
 
 const router = express.Router();
 
+/**
+ * @route GET /getAll
+ * @description Fetch all medicines from the database
+ * @access Admin
+ * @middleware authenticateAdmin - Ensures only admins can access this route
+ */
+router.get(
+  "/getByMainCategory/:mainCategory/:subCategory?/:specificConditions?",
+  fetchByMainCategory
+);
 /**
  * @route GET /getAll
  * @description Fetch all medicines from the database
