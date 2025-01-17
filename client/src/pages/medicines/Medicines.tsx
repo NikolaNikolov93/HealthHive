@@ -1,56 +1,16 @@
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import useMedicinesByCategory from "../../hooks/useMedicinesByCategory";
-
-// Styled Components
-const Wrapper = styled.div`
-  padding: 20px;
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2em;
-`;
-
-const Card = styled.div`
-  flex-basis: calc((100% - 3 * 2em) / 4);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-
-  transition: scale 0.2s ease, box-shadow 0.2s ease;
-`;
-
-const CardImage = styled.img`
-  width: 100%;
-  height: 200px; /* Set a fixed height for all images */
-  object-fit: contain; /* Ensures the image scales to fit the container while maintaining aspect ratio */
-`;
-
-const CardContent = styled.div`
-  padding: 15px;
-`;
-
-const MedicineName = styled.h2`
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-  color: #333;
-`;
-
-const MedicineInfo = styled.p`
-  margin: 5px 0;
-  color: #555;
-
-  strong {
-    color: #333;
-  }
-`;
-
-const NoData = styled.p`
-  font-size: 1rem;
-  color: #888;
-  text-align: center;
-`;
+import {
+  Card,
+  CardContent,
+  CardImage,
+  Container,
+  MedicineInfo,
+  MedicineName,
+  NoData,
+  Wrapper,
+} from "./Medicines.styles";
+import { useState } from "react";
 
 // Component
 const Medicines = () => {
@@ -60,6 +20,25 @@ const Medicines = () => {
     isLoading,
     isError,
   } = useMedicinesByCategory({ mainCategory, subCategory, specificConditions });
+
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [maxPrice, setMaxPrice] = useState<number>(7);
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
+  };
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(Number(e.target.value));
+  };
+
+  const filteredMedicines = medicines
+    ? medicines
+        .filter((medicine) => (maxPrice ? medicine.price < maxPrice : true))
+        .sort((a, b) =>
+          sortOrder === "asc" ? a.price - b.price : b.price - a.price
+        )
+    : [];
 
   if (isLoading) {
     return <Wrapper>Loading medicines...</Wrapper>;
@@ -71,9 +50,31 @@ const Medicines = () => {
 
   return (
     <Wrapper>
+      <div>
+        <label htmlFor="price-slider">Price filter</label>
+        <div style={{ display: "flex", gap: "2em" }}>
+          <span>0</span>
+          <span>{maxPrice}</span>
+          <span>20</span>
+        </div>
+
+        <input
+          type="range"
+          id="price-slider"
+          min="0"
+          max="20"
+          step="0.01"
+          value={maxPrice}
+          onChange={handleSliderChange}
+        />
+      </div>
+      <select onChange={handleSortChange} value={sortOrder}>
+        <option value="asc">Price: Low to High</option>
+        <option value="desc">Price: High to Low</option>
+      </select>
       <Container>
-        {medicines && medicines.length > 0 ? (
-          medicines.map((medicine) => (
+        {filteredMedicines && filteredMedicines.length > 0 ? (
+          filteredMedicines.map((medicine) => (
             <Card key={medicine._id}>
               <CardImage src={medicine.url} alt={medicine.name} />
               <CardContent>
