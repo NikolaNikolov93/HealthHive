@@ -3,8 +3,48 @@ import styled from "styled-components";
 // Styled Components
 export const Wrapper = styled.div`
   padding: 20px;
+  display: flex;
+  gap: 1em;
 `;
+export const FiltersContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  border: 1px solid lightgray;
+  padding: 1em;
+  & > *:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+`;
+export const PriceSlider = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+`;
+export const StyledSelect = styled.select`
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
 
+  &:hover {
+    border-color: #888;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #0056b3;
+  }
+
+  option {
+    padding: 10px;
+  }
+`;
 export const Container = styled.div`
   display: flex;
   flex-wrap: wrap;

@@ -5,9 +5,12 @@ import {
   CardContent,
   CardImage,
   Container,
+  FiltersContainer,
   MedicineInfo,
   MedicineName,
   NoData,
+  PriceSlider,
+  StyledSelect,
   Wrapper,
 } from "./Medicines.styles";
 import { useState } from "react";
@@ -50,28 +53,28 @@ const Medicines = () => {
 
   return (
     <Wrapper>
-      <div>
-        <label htmlFor="price-slider">Price filter</label>
-        <div style={{ display: "flex", gap: "2em" }}>
-          <span>0</span>
-          <span>{maxPrice}</span>
-          <span>20</span>
-        </div>
+      <FiltersContainer>
+        <PriceSlider>
+          <label htmlFor="price-slider">Price filter</label>
+          <div style={{ display: "flex", gap: "2em" }}>
+            <span>{maxPrice}</span>
+          </div>
 
-        <input
-          type="range"
-          id="price-slider"
-          min="0"
-          max="20"
-          step="0.01"
-          value={maxPrice}
-          onChange={handleSliderChange}
-        />
-      </div>
-      <select onChange={handleSortChange} value={sortOrder}>
-        <option value="asc">Price: Low to High</option>
-        <option value="desc">Price: High to Low</option>
-      </select>
+          <input
+            type="range"
+            id="price-slider"
+            min="0"
+            max="20"
+            step="0.01"
+            value={maxPrice}
+            onChange={handleSliderChange}
+          />
+        </PriceSlider>
+        <StyledSelect onChange={handleSortChange} value={sortOrder}>
+          <option value="asc">Price: Low to High</option>
+          <option value="desc">Price: High to Low</option>
+        </StyledSelect>
+      </FiltersContainer>
       <Container>
         {filteredMedicines && filteredMedicines.length > 0 ? (
           filteredMedicines.map((medicine) => (
