@@ -4,7 +4,7 @@ export type MedType = {
   brand: string;
   description: string;
   price: number;
-  url?: string;
+  img: string;
   stockDetails: Map<string, number>;
   category: {
     mainCategory: string;

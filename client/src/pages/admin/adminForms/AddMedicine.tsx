@@ -12,9 +12,20 @@ const AddMedicine = () => {
   const [mainCategory, setMainCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [generalUsage, setGeneralUsage] = useState("");
+  const [imageBase64, setImageBase64] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { mutate: addMedicine, isError } = useAddMedicine();
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageBase64(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     setIsLoading(true);
@@ -30,6 +41,7 @@ const AddMedicine = () => {
         mainCategory,
         subCategory,
         generalUsage,
+        img: imageBase64,
       };
 
       addMedicine(newMedicine); // Call the mutation function to add the medicine
@@ -158,7 +170,15 @@ const AddMedicine = () => {
             )}
         </select>
       </div>
-
+      <div>
+        <label htmlFor="image">Upload Image:</label>
+        <input
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+        />
+      </div>
       <div>
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Adding..." : "Add Medicine"}

@@ -29,6 +29,7 @@ const MedicineSchema: Schema = new Schema({
       specificConditions: { type: String, required: true },
     },
   },
+  img: { type: String, required: true },
 });
 
 // Create the Medicine model using the schema and interface

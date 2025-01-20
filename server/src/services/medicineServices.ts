@@ -58,6 +58,7 @@ export const addNewMedicine = async (medicineData: {
   price: number; // Price of the medicine
   category: object; // Category of the medicine
   stockDetails: Map<string, number>; // Stock details with expiration dates as keys and quantities as values
+  img: string;
 }): Promise<IMedicine> => {
   // Check if a medicine with the same name already exists in the database
   const existingMedicine = await MedicineModel.findOne({

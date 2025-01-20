@@ -19,7 +19,6 @@ export const fetchByMainCategory = async (
   res: Response
 ): Promise<void> => {
   const { mainCategory, subCategory, specificConditions } = req.params;
-  console.log(req.params);
 
   try {
     const meds = await getMedicinesByCategory(
@@ -84,6 +83,7 @@ export const addMedicine = async (
       mainCategory,
       subCategory,
       generalUsage,
+      img,
     } = req.body;
 
     // Ensure all required fields are provided
@@ -95,6 +95,7 @@ export const addMedicine = async (
       !mainCategory ||
       !subCategory ||
       !generalUsage ||
+      !img ||
       !stock ||
       !expirationDate
     ) {
@@ -104,6 +105,14 @@ export const addMedicine = async (
       return;
     }
 
+    const isValidBase64 = (img: string): boolean => {
+      const regex = /^data:image\/(png|jpeg|jpg|gif);base64,/;
+      return regex.test(img);
+    };
+    if (!isValidBase64) {
+      res.status(400).json({ error: "Image is not in valid format" }); // Bad request if fields are missing
+      return;
+    }
     // Create a map to store stock details
     const stockDetails = new Map();
     stockDetails.set(expirationDate, stock);
@@ -124,6 +133,7 @@ export const addMedicine = async (
       price,
       category,
       stockDetails,
+      img,
     });
 
     res.status(201).json(newMedicine); // Respond with the newly created medicine

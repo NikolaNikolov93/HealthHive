@@ -14,6 +14,7 @@ export const useAddMedicine = () => {
       mainCategory: string;
       subCategory: string;
       generalUsage: string;
+      img: string;
     }) => {
       const response = await fetch("http://localhost:5000/medicines/add", {
         method: "POST",

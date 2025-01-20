@@ -15,7 +15,6 @@ const fetchMedicinesByCategory = async ({
     params += `${mainCategory}/${subCategory}/${specificConditions}`;
   else if (subCategory) params += `${mainCategory}/${subCategory}`;
   else params += `${mainCategory}`;
-  console.log(params);
 
   const response = await fetch(
     `http://localhost:5000/medicines/getByMainCategory/${params}`,

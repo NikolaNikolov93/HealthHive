@@ -22,6 +22,58 @@ export const PriceSlider = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  input {
+    -webkit-appearance: none; /* Remove default styling */
+    width: 100%;
+    height: 8px; /* Height of the slider track */
+    background: #ccc; /* Track color */
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: #8ed8a6; /* Track color on hover */
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Remove default styling */
+      appearance: none;
+      width: 20px; /* Thumb size */
+      height: 20px;
+      border-radius: 50%;
+      background: #8ed8a6; /* Thumb color */
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #6db68a; /* Thumb color on hover */
+      }
+    }
+
+    &::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #8ed8a6;
+      cursor: pointer;
+
+      &:hover {
+        background: #6db68a;
+      }
+    }
+
+    &::-ms-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #8ed8a6;
+      cursor: pointer;
+
+      &:hover {
+        background: #6db68a;
+      }
+    }
+  }
 `;
 export const StyledSelect = styled.select`
   padding: 10px;
@@ -33,55 +85,23 @@ export const StyledSelect = styled.select`
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: #888;
+    border-color: #8ed8a6;
   }
 
   &:focus {
     outline: none;
-    border-color: #0056b3;
+    border-color: #8ed8a6;
   }
 
   option {
     padding: 10px;
   }
 `;
-export const Container = styled.div`
+export const MedicinesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 2em;
-`;
-
-export const Card = styled.div`
-  flex-basis: calc((100% - 3 * 2em) / 4);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-
-  transition: scale 0.2s ease, box-shadow 0.2s ease;
-`;
-
-export const CardImage = styled.img`
   width: 100%;
-  height: 200px; /* Set a fixed height for all images */
-  object-fit: contain; /* Ensures the image scales to fit the container while maintaining aspect ratio */
-`;
-
-export const CardContent = styled.div`
-  padding: 15px;
-`;
-
-export const MedicineName = styled.h2`
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-  color: #333;
-`;
-
-export const MedicineInfo = styled.p`
-  margin: 5px 0;
-  color: #555;
-
-  strong {
-    color: #333;
-  }
 `;
 
 export const NoData = styled.p`

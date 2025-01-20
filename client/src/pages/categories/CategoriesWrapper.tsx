@@ -91,7 +91,6 @@ const SubcatList = styled.div`
   position: absolute;
   left: 100%;
   top: 0;
-  z-index: 1;
   background-color: #fff;
   padding: 0em 0.4em;
 `;

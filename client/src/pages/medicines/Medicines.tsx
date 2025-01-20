@@ -1,19 +1,15 @@
 import { useParams } from "react-router-dom";
 import useMedicinesByCategory from "../../hooks/useMedicinesByCategory";
 import {
-  Card,
-  CardContent,
-  CardImage,
-  Container,
+  MedicinesContainer,
   FiltersContainer,
-  MedicineInfo,
-  MedicineName,
   NoData,
   PriceSlider,
   StyledSelect,
   Wrapper,
 } from "./Medicines.styles";
 import { useState } from "react";
+import MedicineCard from "./MedicineCard";
 
 // Component
 const Medicines = () => {
@@ -25,7 +21,7 @@ const Medicines = () => {
   } = useMedicinesByCategory({ mainCategory, subCategory, specificConditions });
 
   const [sortOrder, setSortOrder] = useState("asc");
-  const [maxPrice, setMaxPrice] = useState<number>(7);
+  const [maxPrice, setMaxPrice] = useState<number>(20);
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);
@@ -75,27 +71,15 @@ const Medicines = () => {
           <option value="desc">Price: High to Low</option>
         </StyledSelect>
       </FiltersContainer>
-      <Container>
+      <MedicinesContainer>
         {filteredMedicines && filteredMedicines.length > 0 ? (
           filteredMedicines.map((medicine) => (
-            <Card key={medicine._id}>
-              <CardImage src={medicine.url} alt={medicine.name} />
-              <CardContent>
-                <MedicineName>{medicine.name}</MedicineName>
-                <MedicineInfo>
-                  <strong>Brand:</strong> {medicine.brand}
-                </MedicineInfo>
-                <MedicineInfo>
-                  <strong>Price:</strong> {medicine.price.toFixed(2)}лв.
-                </MedicineInfo>
-                <MedicineInfo>{medicine.description}</MedicineInfo>
-              </CardContent>
-            </Card>
+            <MedicineCard key={medicine._id} medicine={medicine}></MedicineCard>
           ))
         ) : (
           <NoData>No medicines found for this category.</NoData>
         )}
-      </Container>
+      </MedicinesContainer>
     </Wrapper>
   );
 };
