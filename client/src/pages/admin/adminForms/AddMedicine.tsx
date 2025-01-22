@@ -1,27 +1,34 @@
 import { useState } from "react";
 import { useAddMedicine } from "../../../hooks/useAddMedicine";
 import { CategoryData, categoryData } from "../../../constants/contants";
+import useForm from "../../../hooks/useForm";
 
 const AddMedicine = () => {
-  const [name, setName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState<string>("");
-  const [stockDetails, setStockDetails] = useState<string>("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [mainCategory, setMainCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
-  const [generalUsage, setGeneralUsage] = useState("");
-  const [imageBase64, setImageBase64] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
+  const initialFormState = {
+    name: "",
+    brand: "",
+    description: "",
+    price: "",
+    stockDetails: "",
+    expirationDate: "",
+    mainCategory: "",
+    subCategory: "",
+    generalUsage: "",
+    img: "",
+  };
 
+  const { values, handleChange, setValues, resetForm } =
+    useForm(initialFormState);
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string>(""); // New state for success message
   const { mutate: addMedicine, isError } = useAddMedicine();
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImageBase64(reader.result as string);
+        setValues({ img: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
@@ -30,22 +37,18 @@ const AddMedicine = () => {
   const handleSubmit = (e: React.FormEvent) => {
     setIsLoading(true);
     e.preventDefault();
+    setSuccessMessage(""); // Clear previous success message
     try {
       const newMedicine = {
-        name,
-        brand,
-        description,
-        price: parseFloat(price), // Convert price string to number
-        stock: parseFloat(stockDetails),
-        expirationDate,
-        mainCategory,
-        subCategory,
-        generalUsage,
-        img: imageBase64,
+        ...values,
+        price: parseFloat(values.price),
+        stock: parseFloat(values.stockDetails),
       };
 
       addMedicine(newMedicine); // Call the mutation function to add the medicine
       setIsLoading(false);
+      setSuccessMessage("Medicine added successfully!");
+      resetForm();
     } catch (error) {
       console.log(error);
       setIsLoading(false);
@@ -59,8 +62,8 @@ const AddMedicine = () => {
         <input
           id="name"
           type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={values.name}
+          onChange={(e) => handleChange("name", e.target.value)}
           required
         />
       </div>
@@ -69,8 +72,8 @@ const AddMedicine = () => {
         <input
           id="brand"
           type="text"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
+          value={values.brand}
+          onChange={(e) => handleChange("brand", e.target.value)}
           required
         />
       </div>
@@ -79,8 +82,8 @@ const AddMedicine = () => {
         <input
           id="description"
           type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={values.description}
+          onChange={(e) => handleChange("description", e.target.value)}
           required
         />
       </div>
@@ -89,8 +92,8 @@ const AddMedicine = () => {
         <input
           id="price"
           type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          value={values.price}
+          onChange={(e) => handleChange("price", e.target.value)}
           required
         />
       </div>
@@ -99,8 +102,8 @@ const AddMedicine = () => {
         <input
           id="stock"
           type="number"
-          value={stockDetails}
-          onChange={(e) => setStockDetails(e.target.value)}
+          value={values.stockDetails}
+          onChange={(e) => handleChange("stockDetails", e.target.value)}
           required
         />
       </div>
@@ -109,17 +112,17 @@ const AddMedicine = () => {
         <input
           id="expirationDate"
           type="date"
-          value={expirationDate}
-          onChange={(e) => setExpirationDate(e.target.value)}
+          value={values.expirationDate}
+          onChange={(e) => handleChange("expirationDate", e.target.value)}
           required
         />
       </div>
       <div>
-        <label htmlFor="category">Main category:</label>
+        <label htmlFor="mainCategory">Main category:</label>
         <select
           id="mainCategory"
-          value={mainCategory}
-          onChange={(e) => setMainCategory(e.target.value)}
+          value={values.mainCategory}
+          onChange={(e) => handleChange("mainCategory", e.target.value)}
           required
         >
           <option value="">Select Main Category</option>
@@ -131,43 +134,43 @@ const AddMedicine = () => {
         </select>
       </div>
       <div>
-        <label htmlFor="category">Sub category:</label>
+        <label htmlFor="subCategory">Sub category:</label>
         <select
           id="subCategory"
-          value={subCategory}
-          onChange={(e) => setSubCategory(e.target.value)}
+          value={values.subCategory}
+          onChange={(e) => handleChange("subCategory", e.target.value)}
           required
-          disabled={!mainCategory}
+          disabled={!values.mainCategory}
         >
           <option value="">Select Sub Category</option>
-          {mainCategory &&
-            Object.keys(categoryData[mainCategory as keyof CategoryData]).map(
-              (subCat) => (
-                <option key={subCat} value={subCat}>
-                  {subCat}
-                </option>
-              )
-            )}
+          {values.mainCategory &&
+            Object.keys(
+              categoryData[values.mainCategory as keyof CategoryData]
+            ).map((subCat) => (
+              <option key={subCat} value={subCat}>
+                {subCat}
+              </option>
+            ))}
         </select>
       </div>
       <div>
-        <label htmlFor="category">General usage:</label>
+        <label htmlFor="generalUsage">General usage:</label>
         <select
-          id="generalName"
-          value={generalUsage}
-          onChange={(e) => setGeneralUsage(e.target.value)}
+          id="generalUsage"
+          value={values.generalUsage}
+          onChange={(e) => handleChange("generalUsage", e.target.value)}
           required
-          disabled={!subCategory}
+          disabled={!values.subCategory}
         >
           <option value="">Select General Name</option>
-          {subCategory &&
-            categoryData[mainCategory as keyof CategoryData][subCategory].map(
-              (generalName) => (
-                <option key={generalName} value={generalName}>
-                  {generalName}
-                </option>
-              )
-            )}
+          {values.subCategory &&
+            categoryData[values.mainCategory as keyof CategoryData][
+              values.subCategory
+            ].map((generalName) => (
+              <option key={generalName} value={generalName}>
+                {generalName}
+              </option>
+            ))}
         </select>
       </div>
       <div>
@@ -186,6 +189,7 @@ const AddMedicine = () => {
       </div>
 
       {isError && <p style={{ color: "red" }}>Failed to add medicine</p>}
+      {successMessage && <p style={{ color: "green" }}>{successMessage}</p>}
     </form>
   );
 };
