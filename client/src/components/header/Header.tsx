@@ -1,5 +1,4 @@
 import { Link, useNavigate } from "react-router-dom"; // If you're using React Router
-import { FaSearch } from "react-icons/fa";
 import { CiShoppingCart } from "react-icons/ci";
 import { logout } from "../../services/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,11 +11,9 @@ import {
   Logo,
   Nav,
   NavContainer,
-  SearchBar,
-  SearchBarWrapper,
-  SearchButton,
   ShoppingCart,
 } from "./Header.styles";
+import SearchBarComponent from "./SearchBarComponent";
 
 const Header = () => {
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
@@ -51,12 +48,7 @@ const Header = () => {
             <img src="/categories5.png" alt="" />
           </button>
         </CategoriesItem>
-        <SearchBarWrapper>
-          <SearchBar type="text" placeholder="Търсене..." />
-          <SearchButton>
-            <FaSearch />
-          </SearchButton>
-        </SearchBarWrapper>
+        <SearchBarComponent />
         <Nav>
           {isLoggedIn && <p>{`Wellcome, ${user.name}`}</p>}
 
