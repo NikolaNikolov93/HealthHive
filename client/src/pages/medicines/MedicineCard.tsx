@@ -10,12 +10,13 @@ import {
   MedicineName,
   RatingContainer,
 } from "./MedicineCard.styles";
+import { Link } from "react-router-dom";
 type MedicineCardProps = {
   medicine: MedType;
 };
 
 const MedicineCard: React.FC<MedicineCardProps> = ({ medicine }) => {
-  const [currentRating, setCurrentRating] = useState(2); // Current average rating
+  const [currentRating, setCurrentRating] = useState(3.5); // Current average rating
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
 
   const handleRating = async (rating: number) => {
@@ -46,16 +47,13 @@ const MedicineCard: React.FC<MedicineCardProps> = ({ medicine }) => {
       <CardActions>
         <MedicineButtons>
           <button onClick={() => console.log(medicine._id)}>Купи</button>
-          <button>Оцени</button>
+          <Link to={`/item/${medicine._id}`}>Повече</Link>
         </MedicineButtons>
         <RatingContainer rating={currentRating}>
           {" "}
           {Array.from({ length: 5 }, (_, i) => i + 1).map((star) => (
             <span
               key={star}
-              style={{
-                cursor: "pointer",
-              }}
               onMouseEnter={() => setHoveredRating(star)}
               onMouseLeave={() => setHoveredRating(null)}
               onClick={() => handleRating(star)}

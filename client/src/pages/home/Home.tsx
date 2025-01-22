@@ -74,7 +74,7 @@ const Home = () => {
         <Heading>Добре дошли в Health Hive</Heading>
         <Heading>Вашата онлайн аптека</Heading>
         <Subheading>Удобно и бързо пазаруване</Subheading>
-        <Button>Пазарувай сега</Button>
+        <Button>Здравни съвети</Button>
 
         <CategoriesWrapper>
           <Category to={"/Лекарства"}>

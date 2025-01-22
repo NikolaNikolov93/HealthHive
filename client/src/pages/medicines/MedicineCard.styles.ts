@@ -47,10 +47,16 @@ export const MedicineButtons = styled.div`
   margin-top: auto;
   display: flex;
   justify-content: space-around;
-  button {
+  button,
+  a {
     padding: 0.4em 0.6em;
     background-color: #8ed8a6;
     border-radius: 5px;
+    color: #555;
+
+    &:active {
+      color: #555;
+    }
   }
 `;
 export const RatingContainer = styled.div<{ rating: number }>`

@@ -21,10 +21,15 @@ const Medicines = () => {
   } = useMedicinesByCategory({ mainCategory, subCategory, specificConditions });
 
   const [sortOrder, setSortOrder] = useState("asc");
+  const [sortBy, setSortBy] = useState("price"); // New state to track sorting criteria
   const [maxPrice, setMaxPrice] = useState<number>(20);
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSortOrderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSortOrder(e.target.value);
+  };
+
+  const handleSortByChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortBy(e.target.value);
   };
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,9 +39,18 @@ const Medicines = () => {
   const filteredMedicines = medicines
     ? medicines
         .filter((medicine) => (maxPrice ? medicine.price < maxPrice : true))
-        .sort((a, b) =>
-          sortOrder === "asc" ? a.price - b.price : b.price - a.price
-        )
+        .sort((a, b) => {
+          if (sortBy === "price") {
+            return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+          } else if (sortBy === "createdAt") {
+            return sortOrder === "asc"
+              ? new Date(a.createdAt).getTime() -
+                  new Date(b.createdAt).getTime()
+              : new Date(b.createdAt).getTime() -
+                  new Date(a.createdAt).getTime();
+          }
+          return 0;
+        })
     : [];
 
   if (isLoading) {
@@ -66,9 +80,14 @@ const Medicines = () => {
             onChange={handleSliderChange}
           />
         </PriceSlider>
-        <StyledSelect onChange={handleSortChange} value={sortOrder}>
-          <option value="asc">Price: Low to High</option>
-          <option value="desc">Price: High to Low</option>
+        <StyledSelect onChange={handleSortByChange} value={sortBy}>
+          <option value="price">Sort by Price</option>
+          <option value="createdAt">Sort by Date</option>
+        </StyledSelect>
+
+        <StyledSelect onChange={handleSortOrderChange} value={sortOrder}>
+          <option value="asc">Ascending</option>
+          <option value="desc">Descending</option>
         </StyledSelect>
       </FiltersContainer>
       <MedicinesContainer>
