@@ -13,6 +13,8 @@ export type MedType = {
       specificConditions: string;
     };
   };
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type UserType = {
