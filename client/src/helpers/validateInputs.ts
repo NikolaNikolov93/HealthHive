@@ -71,8 +71,8 @@ export const validateInput = (
         isFixed: input.length > 2,
       },
       {
-        message: "Името трябва да съдържа само букви", // "The name must contain only letters"
-        isFixed: /^[a-zA-Zа-яА-Я]+$/.test(input), // Checks for letters only (supports Cyrillic and Latin)
+        message: "Името трябва да съдържа само букви и интервали", // "The name must contain only letters and spaces"
+        isFixed: /^[a-zA-Zа-яА-Я\s]+$/.test(input), // Supports letters (Cyrillic & Latin) and spaces
       },
     ];
   }
