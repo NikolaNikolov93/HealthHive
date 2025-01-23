@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
+import {
+  CategoriesList,
+  CategoryButton,
+  LinkList,
+  SubcatList,
+} from "./CategoriesWrapper.styles";
 
 const CategoriesWrapper = ({
   categoryData,
@@ -11,23 +17,27 @@ const CategoriesWrapper = ({
   setNavigationState: () => void;
   parentPath?: string;
 }) => {
+  // State to keep track of the currently active (expanded) category
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  // Function to toggle the active category when clicked
   const toggleCategory = (key: string) => {
     setActiveCategory((prevKey) => (prevKey === key ? null : key));
   };
+
+  // Handles the click event to navigate to the selected category path
   const handleCategoryClick = (key: string) => {
     const fullPath = `${parentPath ? `${parentPath}/` : ""}${key}`;
-    setNavigationState();
-    navigate(fullPath);
+    setNavigationState(); // Trigger any necessary state updates
+    navigate(fullPath); // Navigate to the selected category path
   };
 
   return (
     <>
       {Object.keys(categoryData).map((key) => {
         const subCategory = categoryData[key];
-        const isOpen = activeCategory === key;
+        const isOpen = activeCategory === key; // Check if category is expanded
         const currentPath = `${parentPath ? `${parentPath}/` : ""}${key}`;
 
         return (
@@ -39,21 +49,20 @@ const CategoriesWrapper = ({
               {key}{" "}
               <span
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation(); // Prevent triggering parent click event
                   toggleCategory(key);
                 }}
               >
-                {isOpen ? `v` : `>`}
+                {isOpen ? <IoIosArrowDown /> : <IoIosArrowForward />}
               </span>
             </CategoryButton>
             {isOpen ? (
               <SubcatList>
                 {Array.isArray(subCategory) ? (
                   subCategory.map((item: string, index: number) => (
-                    <LinkList>
+                    <LinkList key={index}>
                       <CategoryButton
                         isActive={false}
-                        key={index}
                         onClick={() => handleCategoryClick(`${key}/${item}`)}
                       >
                         {item}
@@ -61,6 +70,7 @@ const CategoriesWrapper = ({
                     </LinkList>
                   ))
                 ) : (
+                  // Recursively render subcategories if they exist
                   <CategoriesWrapper
                     categoryData={subCategory}
                     parentPath={currentPath}
@@ -68,61 +78,12 @@ const CategoriesWrapper = ({
                   />
                 )}
               </SubcatList>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </CategoriesList>
         );
       })}
     </>
   );
 };
-
-const CategoriesList = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
-
-const SubcatList = styled.div`
-  min-width: 16.5em;
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background-color: #fff;
-  padding: 0em 0.4em;
-`;
-const LinkList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  min-width: fit-content;
-`;
-
-export const CategoryButton = styled.button<{ isActive: boolean }>`
-  position: relative;
-  background-color: ${({ isActive }) =>
-    isActive ? "#8ed8a6" : "inherit"}; /* Highlight active category */
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-  border-top: 1px solid rgba(128, 128, 128, 0.2);
-  padding: 0.6em 0.4em;
-  display: flex; /* Enable flexbox for better alignment */
-  align-items: center; /* Vertically center text content */
-  &:hover {
-    background-color: ${({ isActive }) => (isActive ? "inherit" : "#8ed8a6")};
-  }
-
-  span {
-    padding: 0.6em 0.4em;
-    border-right: 1px solid rgba(128, 128, 128, 0.2);
-    border-left: 1px solid rgba(128, 128, 128, 0.2);
-    color: gray;
-    position: absolute; /* Position it relative to the button */
-    right: 0; /* Place it outside the right edge */
-    top: 50%; /* Start at the middle of the button */
-    transform: translateY(-50%); /* Perfectly center vertically */
-  }
-`;
 
 export default CategoriesWrapper;

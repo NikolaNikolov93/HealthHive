@@ -1,6 +1,7 @@
 import { categoryData } from "../../constants/contants";
 import { CategoriesContainer, CloseMenuButton } from "./Categories.styles";
 import CategoriesWrapper from "./CategoriesWrapper";
+import { IoIosClose } from "react-icons/io";
 
 const Categories = ({ isCategoriesOpen, handleCategoriesState }: any) => {
   return (
@@ -8,7 +9,7 @@ const Categories = ({ isCategoriesOpen, handleCategoriesState }: any) => {
       {isCategoriesOpen ? (
         <CategoriesContainer>
           <CloseMenuButton onClick={() => handleCategoriesState()}>
-            X
+            <IoIosClose />
           </CloseMenuButton>
           <CategoriesWrapper
             categoryData={categoryData}
