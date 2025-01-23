@@ -1,0 +1,29 @@
+:root {
+  /* Primary Accent Color */
+  --accent-color: #8ed8a6;
+
+  /* Complementary and Lighter/Darker Shades */
+  --accent-light: #b2e4c3; /* Lighter version */
+  --accent-dark: #6cbf87; /* Darker version */
+  --accent-hover: #7fcf97; /* Hover effect color */
+
+  /* Additional UI Colors */
+  --text-color: #333333;
+  --text-color-over-accent-color: #fff;
+  --background-color: #f9f9f9;
+  --border-color: #d1e8d2;
+  --error-color: #e57373; /* Soft Brick Red */
+
+  /* Button Styles */
+  --button-bg: var(--accent-color);
+  --button-hover-bg: var(--accent-hover);
+  --button-text-color: #ffffff;
+
+  /* Scrollbar Styles */
+  --scrollbar-track: #e0f5e7;
+  --scrollbar-thumb: var(--accent-color);
+  --scrollbar-thumb-hover: var(--accent-hover);
+
+  /* Transition for smoother effects */
+  --transition-speed: 0.3s ease-in-out;
+}
