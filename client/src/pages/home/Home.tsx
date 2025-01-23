@@ -1,4 +1,6 @@
 import {
+  BestSellerCard,
+  BestSellers,
   Button,
   CategoriesWrapper,
   Category,
@@ -29,6 +31,11 @@ const Home = () => {
             <CategoryTitle>Бебета и деца</CategoryTitle>
           </Category>
         </CategoriesWrapper>
+        <BestSellers>
+          <BestSellerCard></BestSellerCard>
+          <BestSellerCard></BestSellerCard>
+          <BestSellerCard></BestSellerCard>
+        </BestSellers>
       </HomeContentWrapper>
     </HomeWrapper>
   );

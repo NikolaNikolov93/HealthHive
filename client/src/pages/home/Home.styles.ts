@@ -5,14 +5,14 @@ export const HomeWrapper = styled.div`
   background-image: url("/hero-section.jpg");
   background-position: center;
   background-size: cover;
-  color: #fff;
 `;
 export const HomeContentWrapper = styled.div`
   background-color: rgba(22, 22, 22, 0.2); /* White with 80% opacity */
   display: flex;
   flex-direction: column;
   align-items: center; /* Center children horizontally */
-  padding: 20px;
+  padding: 1em;
+  color: #fff;
 `;
 export const Heading = styled.h1`
   font-size: 3rem;
@@ -65,4 +65,16 @@ export const Category = styled(Link)`
 export const CategoryTitle = styled.h3`
   font-size: 1.2rem;
   color: #333;
+`;
+export const BestSellers = styled.section`
+  margin-top: 2em;
+  display: flex;
+  gap: 1em;
+`;
+export const BestSellerCard = styled.div`
+  height: 400px;
+  width: 300px;
+  border: 1px solid black;
+  background-color: lightgreen;
+  opacity: 0.5;
 `;

@@ -6,7 +6,7 @@ export const LoginPageWrapper = styled.section`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50dvh;
+  padding: 1em;
 `;
 
 // Styled component for the login/register form container
@@ -15,7 +15,7 @@ export const LoginFromWrapper = styled.div`
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
   width: 100%;
-  max-width: 400px; /* Restrict the maximum width */
+  max-width: 30em; /* Restrict the maximum width */
   text-align: center; /* Center-align the content */
 
   h2 {
@@ -25,7 +25,7 @@ export const LoginFromWrapper = styled.div`
   button {
     margin-top: 1em;
     padding: 0.8em 2em;
-    background-color: #8ed8a6; /* Light green background */
+    background-color: var(--accent-color); /* Light green background */
     border: none; /* Remove border */
     border-radius: 4px; /* Rounded corners */
     color: white; /* White text */
@@ -33,10 +33,10 @@ export const LoginFromWrapper = styled.div`
     cursor: pointer; /* Show pointer cursor on hover */
     width: 150px; /* Fixed button width */
     align-self: center; /* Center the button */
-    transition: background-color 0.3s ease; /* Smooth color transition */
+    transition: background-color var(--transition-speed); /* Smooth color transition */
 
     &:hover {
-      background-color: #6dbf8e; /* Darker green on hover */
+      background-color: var(--accent-hover); /* Darker green on hover */
     }
 
     &:focus {
