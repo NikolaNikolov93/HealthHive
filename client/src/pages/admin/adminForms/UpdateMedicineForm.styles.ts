@@ -81,3 +81,6 @@ export const SubmitButton = styled.button`
     background-color: #6dbf8e;
   }
 `;
+export const SuccessMessage = styled.p`
+  color: var(--accent-dark);
+`;

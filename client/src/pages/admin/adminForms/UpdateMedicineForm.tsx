@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { MedType } from "../../../types/types";
 import {
   AddButton,
@@ -8,12 +7,13 @@ import {
   StockField,
   StyledForm,
   SubmitButton,
+  SuccessMessage,
   TextArea,
 } from "./UpdateMedicineForm.styles";
 import { useUpdateMedicine } from "../../../hooks/useUpdateMedicine";
 import useForm from "../../../hooks/useForm";
+import { useState } from "react";
 import ErrorSection from "../../../components/errorSection/ErrorSection";
-import { validateInput } from "../../../helpers/validateInputs";
 
 type UpdateMedicineFormProps = {
   medicine: MedType; // Medicine data passed from the parent component
@@ -25,16 +25,18 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
   onClose,
 }) => {
   // Initialize the useForm hook with initial values from the medicine prop
-  const { values, handleChange, setValues } = useForm({
-    name: medicine.name,
-    brand: medicine.brand,
-    description: medicine.description,
-    price: medicine.price,
-    stockDetails: Object.entries(medicine.stockDetails), // Convert stockDetails to an array for easier manipulation
-    category: medicine.category, // Category remains unchanged
-  });
-
-  const [errors, setErrors] = useState<any[]>([]); // State to store validation errors
+  const { values, errors, handleChange, setValues, handleSubmit } = useForm(
+    {
+      name: medicine.name,
+      brand: medicine.brand,
+      description: medicine.description,
+      price: medicine.price,
+      stockDetails: Object.entries(medicine.stockDetails), // Convert stockDetails to an array for easier manipulation
+      category: medicine.category, // Category remains unchanged
+    },
+    "update-med"
+  );
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   // Hook to handle the update mutation
   const updateMedicineMutation = useUpdateMedicine();
@@ -63,8 +65,7 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
   };
 
   // Handle form submission
-  const handleSubmit = async () => {
-    if (!validateForm()) return; // Prevent submission if there are validation errors
+  const formSubmit = async () => {
     const updatedMedicine = {
       id: medicine._id, // Pass the ID to identify the medicine to update
       ...values,
@@ -74,43 +75,19 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
     // Perform the mutation to update the medicine
     updateMedicineMutation.mutate(updatedMedicine, {
       onSuccess: () => {
-        console.log("Medicine updated successfully!");
+        setSuccessMessage("Medicine updated successfully!");
         onClose(); // Close the form on successful update
       },
     });
   };
-  const validateForm = () => {
-    const newErrors: any[] = [];
-
-    // Validate name
-    newErrors.push(...validateInput(values.name, "name"));
-
-    // Validate brand
-    newErrors.push(...validateInput(values.brand, "brand"));
-
-    // Validate price
-    newErrors.push(...validateInput(values.price.toString(), "price"));
-
-    // Validate description
-    newErrors.push(...validateInput(values.description, "description"));
-
-    // Validate stock details
-    values.stockDetails.forEach(([expireDate, stock], index) => {
-      newErrors.push(
-        ...validateInput(`${expireDate}:${stock}`, "stock", "", "", index)
-      );
-    });
-
-    setErrors(newErrors.filter((error) => !error.isFixed));
-
-    return newErrors.every((error) => error.isFixed);
-  };
 
   return (
-    <StyledForm onSubmit={(e) => e.preventDefault()}>
-      {/* Render ErrorSection for validation errors */}
-      <ErrorSection errors={errors} />
-      {/* Form field for Name */}
+    <StyledForm
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit(formSubmit);
+      }}
+    >
       <FormField>
         <label>
           Name:
@@ -120,6 +97,7 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
             onChange={(e) => handleChange("name", e.target.value)}
           />
         </label>
+        {errors.name && <ErrorSection error={errors.name} />}
       </FormField>
 
       {/* Form field for Brand */}
@@ -132,6 +110,7 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
             onChange={(e) => handleChange("brand", e.target.value)}
           />
         </label>
+        {errors.brand && <ErrorSection error={errors.brand} />}
       </FormField>
 
       {/* Form field for Description */}
@@ -143,6 +122,7 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
             onChange={(e) => handleChange("description", e.target.value)}
           />
         </label>
+        {errors.description && <ErrorSection error={errors.description} />}
       </FormField>
 
       {/* Form field for Price */}
@@ -160,6 +140,7 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
             }
           />
         </label>
+        {errors.price && <ErrorSection error={errors.price} />}
       </FormField>
 
       {/* Dynamic form fields for Stock Details */}
@@ -174,6 +155,10 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
                 handleStockChange(index, e.target.value, stock as number)
               }
             />
+            {errors.stockDetails && (
+              <ErrorSection error={errors.stockDetails} />
+            )}
+
             {stock === 0 ? (
               <Input
                 type={"text"}
@@ -214,9 +199,8 @@ const UpdateMedicineForm: React.FC<UpdateMedicineFormProps> = ({
       </FormField>
 
       {/* Submit button */}
-      <SubmitButton type="button" onClick={handleSubmit}>
-        Update
-      </SubmitButton>
+      <SubmitButton type="submit">Update</SubmitButton>
+      {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
     </StyledForm>
   );
 };

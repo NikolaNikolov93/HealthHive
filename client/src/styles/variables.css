@@ -10,9 +10,11 @@
   /* Additional UI Colors */
   --text-color: #333333;
   --text-color-over-accent-color: #fff;
+  --text-placeholder-color: #aaa;
   --background-color: #f9f9f9;
-  --border-color: #d1e8d2;
+  --border-color: #93e095;
   --error-color: #e57373; /* Soft Brick Red */
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
 
   /* Button Styles */
   --button-bg: var(--accent-color);

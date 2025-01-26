@@ -1,117 +1,79 @@
-import { ErrorsType } from "../../../types/types";
-import { validateInput } from "../../../helpers/validateInputs";
-import ErrorSection from "../../errorSection/ErrorSection";
 import {
+  Error,
+  Form,
+  FormWrapper,
   Input,
-  LoginForm,
-  LoginFromWrapper,
-  LoginPageWrapper,
   NotRegistered,
-} from "../loginForm/LoginForm.styles";
+  PageWrapper,
+  SubmitMessage,
+} from "../loginForm/Form.styles";
 import { useState } from "react";
 import { register } from "../../../services/auth";
+import useForm from "../../../hooks/useForm";
 
 // Main component for the login/register form
 const RegisterFormComponent: React.FC = () => {
   //Sets states for all required filed
-
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [name, setName] = useState<string>("");
-  const [errors, setErrors] = useState<ErrorsType[]>([]);
+  const initialState = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+  const {
+    values,
+    errors,
+    handleChange,
+    setValues,
+    handleSubmit,
+    resetForm,
+    handleBlur,
+  } = useForm(initialState, "register");
+  const [submitMessage, setSubmitMessage] = useState("");
 
   // Function to handle the form submission based on the page type (login/register)
-  const handleSubmit = async () => {
-    if (confirmPassword != password) {
-      setErrors([{ message: "Паролите трябва да съвпадат!", isFixed: false }]);
+  const formSubmit = async () => {
+    if (values.confirmPassword != values.password) {
+      setSubmitMessage("Паролите не съвпадат");
       return;
-    }
-    const userData = await register(name, email, password);
-    if (userData.error) {
-      setErrors([{ message: userData.error, isFixed: false }]);
     } else {
       // Handle successful login (e.g., redirect or set user data)
-      setErrors([{ message: "Успешно регистриране", isFixed: true }]);
-      setEmail("");
-      setPassword("");
-      setName("");
-      setConfirmPassword("");
-    }
-  };
-
-  // Event handler for form submission
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    handleSubmit(); // Determine action based on the page type
-  };
-
-  /**
-   * Handles input changes and updates the relevant state.
-   * @param input - The current input value.
-   * @param inputType - The type of input being updated (e.g., name, email, password).
-   */
-  const changeHandler = (input: string, inputType: string): void => {
-    // Sanitize the input before validation
-
-    // Proceed with validation after sanitization
-    if (inputType === "password") {
-      //Sets the password to be equalt to current input
-      setPassword(input);
-      //Checks the input by specific password critieria in validateInput function
-      const passwordErrors = validateInput(input, "password", "", "register");
-      //Sets the Errors
-      setErrors(passwordErrors);
-    } else if (inputType === "confirmPassword") {
-      //Sets the repeat-password
-      setConfirmPassword(input);
-      //Validates the input by specific repeat-password criteria in validateInput function
-      const confirmPasswordErrors = validateInput(
-        password,
-        "confirmPassword",
-        input
+      const userData = await register(
+        values.name,
+        values.email,
+        values.password
       );
-      //Sets the Erros
-      setErrors(confirmPasswordErrors); // Combine both errors
-    } else if (inputType === "email") {
-      //Sets the eimal
-      setEmail(input);
-      //Validates the input by specific email criteria in validateInput function
-      const emailErrors = validateInput(input, inputType, "", "register");
-      //Sets the Errors
-      setErrors(emailErrors);
-    } else if (inputType === "name") {
-      //Sets the name
-      setName(input);
-      // Validates the input by specific name criteria in validateInput function
-      const nameErrors = validateInput(input, inputType);
-      //Sets the Errors
-      setErrors(nameErrors);
+      if (userData.error) {
+        setSubmitMessage(userData.error);
+        return;
+      } else {
+        resetForm();
+        setSubmitMessage("Успешна регистрация");
+      }
     }
-  };
-
-  /**
-   * Removes the errors when the input field is out of focus
-   */
-  const handleBlur = (): void => {
-    setErrors([]);
   };
 
   return (
-    <LoginPageWrapper>
-      <LoginFromWrapper>
+    <PageWrapper>
+      <FormWrapper>
         <h2>Регистрирай се</h2>
-        <LoginForm onSubmit={submitHandler}>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(formSubmit);
+          }}
+        >
           <div>
             <Input
               type="text"
               placeholder="Име"
               autoComplete="name"
               required
-              value={name}
-              onChange={(e) => changeHandler(e.target.value, "name")}
-              onBlur={handleBlur}
+              value={values.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              onBlur={() => handleBlur("name")}
             />
+            {errors.name && <Error>{errors.name}</Error>}
           </div>
 
           <div>
@@ -120,10 +82,11 @@ const RegisterFormComponent: React.FC = () => {
               placeholder="Имейл"
               autoComplete="email"
               required
-              value={email}
-              onChange={(e) => changeHandler(e.target.value, "email")}
-              onBlur={handleBlur}
+              value={values.email}
+              onChange={(e) => handleChange("email", e.target.value)}
+              onBlur={() => handleBlur("email")}
             />
+            {errors.email && <Error>{errors.email}</Error>}
           </div>
           <div>
             <Input
@@ -131,10 +94,11 @@ const RegisterFormComponent: React.FC = () => {
               placeholder="Парола"
               autoComplete="current-password"
               required
-              value={password}
-              onChange={(e) => changeHandler(e.target.value, "password")}
-              onBlur={handleBlur}
+              value={values.password}
+              onChange={(e) => handleChange("password", e.target.value)}
+              onBlur={() => handleBlur("password")}
             />
+            {errors.password && <Error>{errors.password}</Error>}
           </div>
 
           <div>
@@ -143,20 +107,21 @@ const RegisterFormComponent: React.FC = () => {
               placeholder="Повтори парола"
               autoComplete="new-password"
               required
-              value={confirmPassword}
-              onChange={(e) => changeHandler(e.target.value, "confirmPassword")}
-              onBlur={handleBlur}
+              value={values.confirmPassword}
+              onChange={(e) => handleChange("confirmPassword", e.target.value)}
+              onBlur={() => handleBlur("confirmPassword")}
             />
+            {errors.confirmPassword && <Error>{errors.confirmPassword}</Error>}
           </div>
 
           {/* Link to switch between login and register pages */}
           <NotRegistered to={"/login"}>Вече си регистриран?</NotRegistered>
           {/* Submit button */}
           <button type="submit">Регистриране</button>
-        </LoginForm>
-        <ErrorSection errors={errors} />
-      </LoginFromWrapper>
-    </LoginPageWrapper>
+        </Form>
+        {submitMessage && <SubmitMessage>{submitMessage}</SubmitMessage>}
+      </FormWrapper>
+    </PageWrapper>
   );
 };
 
