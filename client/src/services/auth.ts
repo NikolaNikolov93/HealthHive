@@ -81,3 +81,31 @@ export const logout = async () => {
     throw new Error(error.message || "Грешка при излизането");
   }
 };
+
+export const loginAdmin = async (email: string, password: string) => {
+  try {
+    const response = await fetch("http://localhost:5000/auth/admin/login", {
+      method: "POST", // Request method
+      credentials: "include", // Ensure cookies are sent with the request
+      headers: {
+        "Content-Type": "application/json", // Set content type to JSON
+      },
+      body: JSON.stringify({ email, password }), // Send email and password in request body
+    });
+
+    if (!response.ok) {
+      const data = await response.json(); // Parse the response as JSON
+      throw new Error(data.error || "Login failed"); // Handle login failure
+    }
+    const adminData = await response.json();
+
+    // Check if the role is admin, if not, throw an error
+    if (adminData.role !== "admin") {
+      throw new Error("Admins only"); // If role is not admin, show error
+    } else {
+      return adminData;
+    }
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
